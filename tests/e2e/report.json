@@ -1,0 +1,205 @@
+{
+  "timestamp": "2026-08-31T19:47:14.540Z",
+  "baseUrl": "http://localhost:3000",
+  "tiers": {
+    "tier1": [
+      {
+        "name": "Tier 1.01: Landing page loads successfully and returns HTTP 200",
+        "passed": true,
+        "durationMs": 35
+      },
+      {
+        "name": "Tier 1.02: Landing page contains all 7 required sections in order",
+        "passed": true,
+        "durationMs": 45
+      },
+      {
+        "name": "Tier 1.03: Hero Section displays Eyebrow, Headline, and Supporting Copy",
+        "passed": true,
+        "durationMs": 43
+      },
+      {
+        "name": "Tier 1.04: Hero Section displays Dual CTAs (Join the Waitlist & Learn More)",
+        "passed": true,
+        "durationMs": 34
+      },
+      {
+        "name": "Tier 1.05: Hero Section displays coded UI Mockup Panel (search bar, practice area tags)",
+        "passed": true,
+        "durationMs": 34
+      },
+      {
+        "name": "Tier 1.06: How It Works section contains 01, 02, 03 step sequence",
+        "passed": true,
+        "durationMs": 32
+      },
+      {
+        "name": "Tier 1.07: Why MyLaw section contains 4 principles (Clarity, Choice, Trust, Accessibility)",
+        "passed": true,
+        "durationMs": 27
+      },
+      {
+        "name": "Tier 1.08: Who It's For section contains Individual and Lawyer panels with dedicated CTAs",
+        "passed": true,
+        "durationMs": 37
+      },
+      {
+        "name": "Tier 1.09: Section backgrounds alternate rhythmically between white (#FFFFFF) and soft grey (#F7F8FA)",
+        "passed": true,
+        "durationMs": 1
+      },
+      {
+        "name": "Tier 1.10: Sticky Navbar contains Wordmark, Nav Links, Join Waitlist CTA, and Mobile Hamburger",
+        "passed": true,
+        "durationMs": 29
+      },
+      {
+        "name": "Tier 1.11: Footer contains MyLaw Wordmark, Tagline, Links, and Copyright Notice",
+        "passed": true,
+        "durationMs": 30
+      },
+      {
+        "name": "Tier 1.12: Waitlist page (/waitlist) loads successfully with centered layout & COMING SOON eyebrow",
+        "passed": true,
+        "durationMs": 23
+      },
+      {
+        "name": "Tier 1.13: Waitlist page contains Email input with type=\"email\" and required attribute",
+        "passed": true,
+        "durationMs": 19
+      },
+      {
+        "name": "Tier 1.14: Waitlist page contains Optional Role selector (Looking for legal help / Lawyer)",
+        "passed": true,
+        "durationMs": 15
+      },
+      {
+        "name": "Tier 1.15: Waitlist page contains Submit button and Privacy microcopy",
+        "passed": true,
+        "durationMs": 25
+      }
+    ],
+    "tier2": [
+      {
+        "name": "Tier 2.01: Empty email input is rejected by validation",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.02: Malformed email strings are rejected by validation",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.03: Email with leading and trailing whitespace is sanitized and accepted",
+        "passed": true,
+        "durationMs": 51
+      },
+      {
+        "name": "Tier 2.04: Submission succeeds without selecting optional role",
+        "passed": true,
+        "durationMs": 51
+      },
+      {
+        "name": "Tier 2.05: Submitting with explicit role preserves selected role value",
+        "passed": true,
+        "durationMs": 103
+      },
+      {
+        "name": "Tier 2.06: Rapid double submission is handled cleanly without duplicate execution",
+        "passed": true,
+        "durationMs": 51
+      },
+      {
+        "name": "Tier 2.07: Light mode strictly enforced with zero dark-mode media query rules in globals.css",
+        "passed": true,
+        "durationMs": 1
+      },
+      {
+        "name": "Tier 2.08: Design tokens in globals.css match exact design spec values",
+        "passed": true,
+        "durationMs": 1
+      },
+      {
+        "name": "Tier 2.09: Root layout configures Inter Google font",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.10: Responsive classes are implemented for mobile (single-col) and desktop (multi-col)",
+        "passed": true,
+        "durationMs": 54
+      }
+    ],
+    "tier3": [
+      {
+        "name": "Tier 3.01: Landing page defines section ID targets corresponding to navbar links (#about, #how-it-works, #for-lawyers)",
+        "passed": true,
+        "durationMs": 41
+      },
+      {
+        "name": "Tier 3.02: Navbar navigation anchors correctly map to corresponding landing page sections",
+        "passed": true,
+        "durationMs": 30
+      },
+      {
+        "name": "Tier 3.03: All primary CTA buttons across Landing sections route to /waitlist",
+        "passed": true,
+        "durationMs": 50
+      },
+      {
+        "name": "Tier 3.04: Hero secondary CTA \"Learn More\" connects to #how-it-works section",
+        "passed": true,
+        "durationMs": 29
+      },
+      {
+        "name": "Tier 3.05: Section 05 \"I'm a Lawyer\" CTA routes to /waitlist with role intent",
+        "passed": true,
+        "durationMs": 28
+      },
+      {
+        "name": "Tier 3.06: Waitlist page header and/or back button connects back to homepage (/)",
+        "passed": true,
+        "durationMs": 28
+      },
+      {
+        "name": "Tier 3.07: Waitlist page successfully renders when navigated with query parameter /waitlist?role=lawyer",
+        "passed": true,
+        "durationMs": 15
+      }
+    ],
+    "tier4": [
+      {
+        "name": "Tier 4.01: Full Consumer Journey — Landing discovery -> Waitlist -> Individual role -> Submission -> Success State",
+        "passed": true,
+        "durationMs": 106
+      },
+      {
+        "name": "Tier 4.02: Full Lawyer Journey — Landing \"For Lawyers\" -> Waitlist -> Lawyer role -> Submission -> Success State",
+        "passed": true,
+        "durationMs": 111
+      },
+      {
+        "name": "Tier 4.03: Negative Brand Check — Complete absence of gavels, scales of justice, and courtroom tropes",
+        "passed": true,
+        "durationMs": 3
+      },
+      {
+        "name": "Tier 4.04: Negative Brand Check — Complete absence of fake statistics and fabricated testimonials",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 4.05: Negative Brand Check — Complete absence of black/gold luxury styles and purple AI hype gradients",
+        "passed": true,
+        "durationMs": 1
+      }
+    ]
+  },
+  "summary": {
+    "total": 37,
+    "passed": 37,
+    "failed": 0,
+    "durationMs": 1322
+  }
+}

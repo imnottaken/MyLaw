@@ -22,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("scroll-smooth", inter.variable, "font-sans", geist.variable)}>
-      <body className="bg-[#172033] text-[#172033] font-sans antialiased min-h-screen flex flex-col">
+    <html lang="en" className={cn("scroll-smooth overscroll-none", inter.variable, "font-sans", geist.variable)}>
+      <body className="bg-[#172033] text-[#172033] font-sans antialiased min-h-screen flex flex-col overscroll-none">
         {children}
       </body>
     </html>

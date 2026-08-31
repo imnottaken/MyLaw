@@ -12,17 +12,20 @@ export default function Navbar() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
+    // Check initial scroll position on mount
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const atTop = !scrolled;
+  // The navbar should be solid if we've scrolled down, OR if the mobile menu is open.
+  const isSolid = scrolled || isOpen;
 
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        atTop
+        !isSolid
           ? "bg-white/10 backdrop-blur-md border-b border-white/15"
-          : "bg-white/95 backdrop-blur-md border-b border-[#E6E8EC] shadow-[0_1px_3px_rgba(16,24,40,0.05)]"
+          : "bg-white/95 backdrop-blur-md border-b border-[#E6E8EC] shadow-sm"
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,6 +35,7 @@ export default function Navbar() {
           <div className="flex-shrink-0">
             <Link
               href="/"
+              onClick={() => setIsOpen(false)}
               className="flex items-center gap-2.5 hover:opacity-85 transition-opacity duration-150"
             >
               <Image
@@ -44,7 +48,7 @@ export default function Navbar() {
               />
               <span
                 className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
-                  atTop ? "text-white" : "text-[#172033]"
+                  !isSolid ? "text-white" : "text-[#172033]"
                 }`}
               >
                 MyLaw
@@ -61,7 +65,7 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   className={`text-sm font-medium transition-colors duration-150 ${
-                    atTop
+                    !isSolid
                       ? "text-white/80 hover:text-white"
                       : "text-[#667085] hover:text-[#172033]"
                   }`}
@@ -84,7 +88,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setIsOpen(!isOpen)}
               className={`inline-flex items-center justify-center p-2 rounded-[6px] focus:outline-none transition-colors ${
-                atTop
+                !isSolid
                   ? "text-white hover:bg-white/10"
                   : "text-[#172033] hover:text-[#285A8E] hover:bg-[#F7F8FA]"
               }`}
@@ -99,7 +103,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="md:hidden border-t border-white/15 bg-[#172033]/90 backdrop-blur-md px-4 pt-3 pb-6 sm:px-6">
+        <div className="md:hidden border-t border-[#E6E8EC] bg-white px-4 pt-3 pb-6 sm:px-6 shadow-lg relative z-40">
           <div className="flex flex-col space-y-1">
             {[
               { href: "/#about", label: "About" },
@@ -110,7 +114,7 @@ export default function Navbar() {
                 key={href}
                 href={href}
                 onClick={() => setIsOpen(false)}
-                className="px-3 py-2.5 rounded-[6px] text-base font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                className="px-3 py-2.5 rounded-[6px] text-base font-medium text-[#667085] hover:text-[#172033] hover:bg-[#F7F8FA] transition-colors"
               >
                 {label}
               </Link>
@@ -119,7 +123,7 @@ export default function Navbar() {
               <Link
                 href="/waitlist"
                 onClick={() => setIsOpen(false)}
-                className="flex w-full items-center justify-center px-4 py-3 text-base font-semibold text-white bg-[#285A8E] hover:bg-[#1e4670] rounded-[6px] transition-all duration-200 cursor-pointer"
+                className="flex w-full items-center justify-center px-4 py-3 text-base font-semibold text-white bg-[#285A8E] hover:bg-[#1e4670] rounded-[6px] shadow-sm transition-all duration-200 cursor-pointer"
               >
                 Join Waitlist
               </Link>

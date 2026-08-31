@@ -47,44 +47,19 @@ export default function FinalCtaSection() {
         </div>
       </div>
 
-      {/* Integrated Dark Footer */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-auto border-t border-white/10 relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Left: Brand & Tagline */}
-          <div className="flex items-center gap-4 text-center md:text-left">
-            <Link
-              href="/"
-              className="text-lg font-bold tracking-tight text-white hover:opacity-90 transition-opacity"
-            >
-              MyLaw
-            </Link>
-            <span className="hidden md:inline-block w-1 h-1 rounded-full bg-white/20" />
-            <p className="text-xs sm:text-sm text-white/60">
-              A simpler way to discover and connect with the right legal professionals.
-            </p>
-          </div>
-
-          {/* Right: Links */}
+      {/* Ultra-Minimal Dark Footer */}
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-auto border-t border-white/10 relative z-10">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-white/40">
+            © 2026 MyLaw. All rights reserved.
+          </p>
+          
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm font-medium text-white/60">
-            <Link href="/#about" className="hover:text-white transition-colors">
-              About
-            </Link>
-            <Link href="#" className="hover:text-white transition-colors">
-              Privacy
-            </Link>
-            <Link href="#" className="hover:text-white transition-colors">
-              Terms
-            </Link>
-            <a href="mailto:contact@mylaw.com" className="hover:text-white transition-colors">
-              Contact
-            </a>
+            <Link href="/#about" className="hover:text-white transition-colors">About</Link>
+            <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="#" className="hover:text-white transition-colors">Terms</Link>
+            <a href="mailto:contact@mylaw.com" className="hover:text-white transition-colors">Contact</a>
           </div>
-        </div>
-
-        {/* Bottom Row: Copyright */}
-        <div className="mt-6 pt-6 border-t border-white/10 flex items-center justify-between text-[11px] sm:text-xs text-white/40">
-          <p>© 2026 MyLaw. All rights reserved.</p>
-          <p>Legal help, simplified.</p>
         </div>
       </div>
     </section>

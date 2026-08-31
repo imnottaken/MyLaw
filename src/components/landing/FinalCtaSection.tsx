@@ -7,11 +7,12 @@ export default function FinalCtaSection() {
     <section className="bg-[#172033] relative overflow-hidden border-t border-[#172033] min-h-dvh flex flex-col justify-between">
       {/* Background Image */}
       <Image
-        src="/final_cta_bg.jpg"
-        alt="Abstract dark architectural background"
+        src="/hero page img.png"
+        alt="Blurred office background"
         fill
-        className="object-cover object-center opacity-100 mix-blend-overlay"
-        quality={100}
+        className="object-cover object-center opacity-50 blur-lg scale-105"
+        style={{ transform: 'scaleX(-1) scale(1.05)' }}
+        quality={90}
       />
       {/* Overlay to ensure text readability */}
       <div className="absolute inset-0 bg-[#172033]/40 bg-gradient-to-t from-[#172033] via-[#172033]/50 to-transparent" />

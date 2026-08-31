@@ -21,8 +21,8 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section id="how-it-works" className="bg-white border-b border-[#E6E8EC] scroll-mt-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+    <section id="how-it-works" className="bg-white border-b border-[#E6E8EC] scroll-mt-16 min-h-dvh flex flex-col justify-center">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
         {/* Section Header */}
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold tracking-wider text-[#285A8E] bg-[#F7F8FA] border border-[#E6E8EC] rounded-[6px] uppercase mb-4">

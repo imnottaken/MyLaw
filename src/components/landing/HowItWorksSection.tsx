@@ -21,8 +21,22 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section id="how-it-works" className="bg-white border-b border-[#E6E8EC] scroll-mt-16 min-h-dvh flex flex-col justify-center">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+    <section id="how-it-works" className="bg-white border-b border-[#E6E8EC] scroll-mt-16 min-h-dvh flex flex-col justify-center relative overflow-hidden">
+      {/* Subtle Dot Pattern Background */}
+      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" aria-hidden="true">
+        <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="howitworks-dots" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1" fill="#172033" fillOpacity="0.1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#howitworks-dots)" />
+        </svg>
+        {/* Radial gradient mask to fade the dots out at the edges */}
+        <div className="absolute inset-0 bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black_80%)]" />
+      </div>
+
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold tracking-wider text-[#285A8E] bg-[#F7F8FA] border border-[#E6E8EC] rounded-[6px] uppercase mb-4">

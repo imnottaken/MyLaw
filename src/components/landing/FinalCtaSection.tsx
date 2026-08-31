@@ -10,11 +10,11 @@ export default function FinalCtaSection() {
         src="/final_cta_bg.jpg"
         alt="Abstract dark architectural background"
         fill
-        className="object-cover object-center opacity-80"
-        quality={90}
+        className="object-cover object-center opacity-100 mix-blend-overlay"
+        quality={100}
       />
       {/* Overlay to ensure text readability */}
-      <div className="absolute inset-0 bg-[#172033]/70 bg-gradient-to-t from-[#172033] via-[#172033]/60 to-transparent" />
+      <div className="absolute inset-0 bg-[#172033]/40 bg-gradient-to-t from-[#172033] via-[#172033]/50 to-transparent" />
 
       {/* Restrained teal top accent rule */}
       <div className="absolute top-0 inset-x-0 h-1 w-full bg-[#2F7C78] z-10" />

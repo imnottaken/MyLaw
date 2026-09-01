@@ -22,7 +22,7 @@ export default function HeroSection() {
       <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#2F7C78]/20 to-transparent" />
 
       {/* Content — centered column over the image */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
         <div className="max-w-3xl">
 
           {/* Eyebrow badge */}

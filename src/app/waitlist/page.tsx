@@ -11,43 +11,46 @@ export const metadata: Metadata = {
 
 export default function WaitlistPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#172033] relative overflow-hidden">
-      {/* Very subtle background dot pattern */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.025]"
-        aria-hidden="true"
-      >
-        <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="wl-dots" width="24" height="24" patternUnits="userSpaceOnUse">
-              <circle cx="1" cy="1" r="0.8" fill="#172033" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#wl-dots)" />
-        </svg>
+    <div className="min-h-screen flex flex-col justify-between text-white relative overflow-hidden">
+      {/* Cinematic Stock Background — Blurred + Dark Navy Overlay */}
+      <div className="pointer-events-none absolute inset-0 -z-30" aria-hidden="true">
+        <Image
+          src="/waitlist-bg.jpg"
+          alt=""
+          fill
+          className="object-cover scale-105 blur-md"
+          quality={75}
+          priority
+        />
       </div>
+      {/* Dark Navy Overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-20 bg-[#172033]/75"
+        aria-hidden="true"
+      />
+      {/* Subtle Radial Highlight — adds depth */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_50%_at_30%_40%,rgba(40,90,142,0.15),transparent_70%)]"
+        aria-hidden="true"
+      />
+      {/* Subtle Warm Vignette Edges */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_100%_100%_at_50%_50%,transparent_40%,rgba(23,32,51,0.5)_100%)]"
+        aria-hidden="true"
+      />
 
-      {/* Navbar */}
-      <header className="w-full border-b border-[#E6E8EC] bg-white sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
+      {/* Dedicated Header — Glass effect on dark background */}
+      <header className="w-full border-b border-white/10 bg-[#172033]/40 backdrop-blur-md sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-2.5 hover:opacity-85 transition-opacity duration-150"
+            className="text-xl font-bold tracking-tight text-white hover:text-white/80 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 rounded-sm"
           >
-            <Image
-              src="/logo mylaw.jpeg"
-              alt="MyLaw logo"
-              width={28}
-              height={28}
-              className="rounded-full object-cover"
-            />
-            <span className="text-lg font-bold tracking-tight text-[#172033]">
-              MyLaw
-            </span>
+            MyLaw
           </Link>
           <Link
             href="/"
-            className="text-sm font-medium text-[#667085] hover:text-[#172033] transition-colors duration-150 flex items-center gap-1.5"
+            className="text-sm font-medium text-white/60 hover:text-white transition-colors duration-150 flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 rounded-sm"
           >
             <span>←</span>
             <span>Back to Home</span>
@@ -55,120 +58,120 @@ export default function WaitlistPage() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col justify-center">
-        <div className="w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center lg:min-h-[calc(100vh-10rem)]">
+      {/* Main Asymmetric Split Layout */}
+      <main className="flex-1 flex items-center py-10 sm:py-14 lg:py-20 relative">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Left Column: Hero & Brand Authority (lg:col-span-7) */}
+            <div className="lg:col-span-7 space-y-6 sm:space-y-8 relative">
 
-            {/* ─── Left Column: Typography & Copy ─── */}
-            <div className="space-y-8 relative">
-              {/* Oversized faint numbering */}
-              <div
-                className="pointer-events-none absolute -top-6 -left-4 sm:-left-6 text-[8rem] sm:text-[10rem] lg:text-[12rem] font-bold tracking-tighter text-[#172033]/[0.03] select-none -z-10 leading-none font-mono"
-                aria-hidden="true"
-              >
-                01
-              </div>
-
-              {/* Eyebrow */}
+              {/* Eyebrow Badge */}
               <div className="flex items-center gap-3">
-                <div className="w-8 h-px bg-[#285A8E]" />
-                <span className="text-[11px] font-semibold tracking-[0.2em] text-[#285A8E] uppercase">
-                  Coming Soon
-                </span>
-              </div>
-
-              {/* Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[4rem] font-semibold text-[#172033] tracking-tight leading-[1.1]">
-                Legal help,<br />
-                made simpler.
-              </h1>
-
-              {/* Thin accent rule */}
-              <div className="w-12 h-[2px] bg-[#285A8E]/40" />
-
-              {/* Supporting copy */}
-              <p className="text-base sm:text-lg text-[#667085] max-w-md leading-relaxed">
-                We&apos;re building a simpler way to discover and connect with legal professionals.
-              </p>
-
-              {/* Small editorial detail */}
-              <div className="flex items-center gap-4 pt-2">
-                <span className="text-[10px] font-mono font-medium text-[#667085]/50 tracking-widest uppercase">
-                  MyLaw / 2026
-                </span>
-                <div className="w-px h-3 bg-[#E6E8EC]" />
-                <span className="text-[10px] font-mono font-medium text-[#667085]/50 tracking-widest uppercase">
-                  Early Access
-                </span>
-              </div>
-            </div>
-
-            {/* ─── Right Column: Image + Form ─── */}
-            <div className="space-y-6 lg:space-y-0 relative">
-
-              {/* Editorial Image Block */}
-              <div className="relative rounded-xl overflow-hidden aspect-[4/3] lg:aspect-[3/4] xl:aspect-[4/5] shadow-[0_8px_40px_rgba(23,32,51,0.12)]">
-                <Image
-                  src="/hero page img.png"
-                  alt="Lady Justice — symbol of fair and accessible legal representation"
-                  fill
-                  className="object-cover"
-                  quality={85}
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-                {/* Dark navy gradient overlay — bottom-heavy for form contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#172033]/90 via-[#172033]/30 to-[#172033]/10" />
-
-                {/* Small editorial accent on image */}
-                <div className="absolute top-5 left-5 flex items-center gap-2">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] text-xs font-semibold tracking-widest text-white bg-white/10 border border-white/15 uppercase shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#2F7C78]" />
-                  <span className="text-[10px] font-semibold tracking-[0.15em] text-white/70 uppercase">
-                    Est. 2026
-                  </span>
-                </div>
+                  <span>COMING SOON / 01</span>
+                </span>
+                <span className="text-xs font-mono font-medium text-white/40 tracking-wider">
+                  EARLY ACCESS
+                </span>
+              </div>
 
-                {/* Form overlaid at the bottom of the image */}
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                  <div className="bg-white rounded-[10px] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.15)]">
-                    <div className="mb-4 space-y-1">
-                      <h2 className="text-lg font-semibold text-[#172033] tracking-tight">
-                        Join the Waitlist
-                      </h2>
-                      <p className="text-xs text-[#667085]">
-                        Be among the first to experience MyLaw.
-                      </p>
-                    </div>
-                    <WaitlistForm />
-                  </div>
+              {/* Headline & Description */}
+              <div className="space-y-4">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-semibold text-white tracking-tight leading-[1.15]">
+                  Legal help, made simpler.
+                </h1>
+
+                {/* Thin Editorial Accent Rule */}
+                <div className="w-16 h-0.5 bg-[#285A8E] rounded-full" />
+
+                {/* Brand Statement */}
+                <p className="text-base sm:text-lg text-white/60 max-w-xl leading-relaxed">
+                  We&apos;re building a better way to discover and connect with legal professionals. Experience clarity, curated guidance, and direct communication designed around your needs.
+                </p>
+              </div>
+
+              {/* Editorial Feature Highlights / Value Pillars */}
+              <div className="pt-2 sm:pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-white/10 text-left">
+                <div className="space-y-1">
+                  <div className="text-xs font-mono font-semibold text-[#5B9BD5]">01 / CLARITY</div>
+                  <div className="text-xs text-white/50">Transparent insights and guided next steps.</div>
+                </div>
+                <div className="space-y-1 sm:border-l sm:border-white/10 sm:pl-4">
+                  <div className="text-xs font-mono font-semibold text-[#5B9BD5]">02 / CHOICE</div>
+                  <div className="text-xs text-white/50">Verified legal practitioners by domain expertise.</div>
+                </div>
+                <div className="space-y-1 sm:border-l sm:border-white/10 sm:pl-4">
+                  <div className="text-xs font-mono font-semibold text-[#5B9BD5]">03 / TRUST</div>
+                  <div className="text-xs text-white/50">Confidential inquiries with zero friction.</div>
                 </div>
               </div>
             </div>
 
+            {/* Right Column: Elevated Waitlist Card Container (lg:col-span-5) */}
+            <div className="lg:col-span-5 w-full mt-8 lg:mt-0 relative">
+              <div className="bg-white/[0.97] backdrop-blur-sm border border-white/20 rounded-[10px] sm:rounded-[14px] p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.25)] relative overflow-hidden text-[#172033]">
+                {/* Translucent "01" Index Marker */}
+                <div
+                  className="pointer-events-none absolute top-4 right-5 text-2xl font-mono font-bold text-[#285A8E]/10 select-none"
+                  aria-hidden="true"
+                >
+                  01
+                </div>
+
+                {/* Card Title & Description */}
+                <div className="mb-6 space-y-1.5">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#285A8E] uppercase tracking-wider">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2F7C78]" />
+                    <span>Priority Access</span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-semibold text-[#172033] tracking-tight">
+                    Join the Waitlist
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#667085]">
+                    Be among the first to experience MyLaw when we launch. Select your role for tailored early access.
+                  </p>
+                </div>
+
+                {/* Interactive Waitlist Form Component */}
+                <WaitlistForm />
+              </div>
+            </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full border-t border-[#E6E8EC] py-6">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#667085]">
+      {/* Minimal Footer — Glass on dark */}
+      <footer className="w-full border-t border-white/10 py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/40">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-[#172033]">MyLaw</span>
-            <span className="text-[#E6E8EC]">·</span>
-            <span>&copy; 2026 MyLaw. All rights reserved.</span>
+            <span className="font-semibold text-white/70">MyLaw</span>
+            <span>&bull;</span>
+            <p>&copy; 2026 MyLaw. All rights reserved.</p>
           </div>
-          <div className="flex items-center gap-5">
-            <Link href="#" className="hover:text-[#172033] transition-colors duration-150">
+
+          <div className="flex items-center gap-6">
+            <Link
+              href="#"
+              className="hover:text-white/70 transition-colors duration-150"
+            >
               Privacy
             </Link>
-            <Link href="#" className="hover:text-[#172033] transition-colors duration-150">
+            <Link
+              href="#"
+              className="hover:text-white/70 transition-colors duration-150"
+            >
               Terms
             </Link>
-            <a href="mailto:contact@mylaw.com" className="hover:text-[#172033] transition-colors duration-150">
+            <a
+              href="mailto:contact@mylaw.com"
+              className="hover:text-white/70 transition-colors duration-150"
+            >
               Contact
             </a>
           </div>
+
+          <p className="text-white/30">Legal help, simplified.</p>
         </div>
       </footer>
     </div>

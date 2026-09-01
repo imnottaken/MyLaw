@@ -51,17 +51,38 @@ function WaitlistFormContent() {
   const [role, setRole] = useState<RoleOption>(initialRole);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successSubtitle, setSuccessSubtitle] = useState("Thanks for joining MyLaw. We'll let you know when we're ready.");
   const [fadeState, setFadeState] = useState<"visible" | "fading-out" | "fading-in">("visible");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const sanitizedEmail = email.trim();
     if (!sanitizedEmail) return;
 
     setIsSubmitting(true);
+    setErrorMessage(null);
 
-    // Snappy transition <= 200ms
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: sanitizedEmail, role, source: "waitlist_page" }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setErrorMessage(data.error || "Failed to join waitlist. Please check your email and try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (data.alreadyRegistered) {
+        setSuccessSubtitle("You're already on the priority access list! We'll keep you updated.");
+      }
+
+      // Smooth transition to success
       setFadeState("fading-out");
       setTimeout(() => {
         setIsSubmitting(false);
@@ -71,7 +92,11 @@ function WaitlistFormContent() {
           setFadeState("visible");
         }, 50);
       }, 150);
-    }, 200);
+    } catch (err) {
+      console.error("Waitlist submit error:", err);
+      setErrorMessage("Network error. Please check your connection and try again.");
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -90,7 +115,7 @@ function WaitlistFormContent() {
           You&apos;re on the list.
         </h3>
         <p className="text-sm text-[#667085] leading-relaxed mb-5">
-          Thanks for joining MyLaw. We&apos;ll let you know when we&apos;re ready.
+          {successSubtitle}
         </p>
         <Link
           href="/"
@@ -180,6 +205,13 @@ function WaitlistFormContent() {
             )}
           </button>
         </div>
+
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="p-2.5 rounded-[6px] bg-red-50 border border-red-200 text-xs text-red-700 text-center font-medium animate-in fade-in">
+            {errorMessage}
+          </div>
+        )}
 
         {/* Microcopy */}
         <p className="text-[11px] text-[#667085]/70 pt-0.5">

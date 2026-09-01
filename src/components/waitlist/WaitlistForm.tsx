@@ -94,45 +94,43 @@ function WaitlistFormContent() {
       }`}
     >
       <form onSubmit={handleSubmit} className="w-full space-y-4">
-        {/* Optional Role Selector */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mb-5 text-sm">
-          <span className="text-xs sm:text-sm font-medium text-[#667085]">I am a:</span>
-          <div className="flex items-center gap-2">
-            <label
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[6px] border text-xs sm:text-sm font-medium cursor-pointer transition-all duration-150 select-none ${
+        {/* Optional Role Selector — Custom Selectable Blocks */}
+        <div className="space-y-2.5 mb-5">
+          <span className="block text-xs font-medium text-[#667085] uppercase tracking-wider">I am a:</span>
+          <div className="grid grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              onClick={() => setRole(role === "help" ? null : "help")}
+              className={`relative flex items-center justify-center gap-2 h-[48px] rounded-[8px] border text-sm font-medium cursor-pointer transition-all duration-150 select-none ${
                 role === "help"
-                  ? "border-[#285A8E] bg-[#285A8E]/8 text-[#285A8E] font-semibold"
+                  ? "border-[#285A8E] bg-[#285A8E]/[0.06] text-[#285A8E] font-semibold ring-1 ring-[#285A8E]/20"
                   : "border-[#E6E8EC] bg-white text-[#172033] hover:bg-[#F7F8FA] hover:border-[#285A8E]/30"
               }`}
             >
-              <input
-                type="radio"
-                name="role"
-                value="help"
-                checked={role === "help"}
-                onChange={() => setRole("help")}
-                className="accent-[#285A8E] h-3.5 w-3.5 cursor-pointer"
-              />
+              {role === "help" && (
+                <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#285A8E] flex items-center justify-center">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 5.5L4 7L7.5 3.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </span>
+              )}
               <span>Looking for legal help</span>
-            </label>
+            </button>
 
-            <label
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[6px] border text-xs sm:text-sm font-medium cursor-pointer transition-all duration-150 select-none ${
+            <button
+              type="button"
+              onClick={() => setRole(role === "lawyer" ? null : "lawyer")}
+              className={`relative flex items-center justify-center gap-2 h-[48px] rounded-[8px] border text-sm font-medium cursor-pointer transition-all duration-150 select-none ${
                 role === "lawyer"
-                  ? "border-[#285A8E] bg-[#285A8E]/8 text-[#285A8E] font-semibold"
+                  ? "border-[#285A8E] bg-[#285A8E]/[0.06] text-[#285A8E] font-semibold ring-1 ring-[#285A8E]/20"
                   : "border-[#E6E8EC] bg-white text-[#172033] hover:bg-[#F7F8FA] hover:border-[#285A8E]/30"
               }`}
             >
-              <input
-                type="radio"
-                name="role"
-                value="lawyer"
-                checked={role === "lawyer"}
-                onChange={() => setRole("lawyer")}
-                className="accent-[#285A8E] h-3.5 w-3.5 cursor-pointer"
-              />
+              {role === "lawyer" && (
+                <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#285A8E] flex items-center justify-center">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.5 5.5L4 7L7.5 3.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </span>
+              )}
               <span>Lawyer</span>
-            </label>
+            </button>
           </div>
         </div>
 

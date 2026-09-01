@@ -47,7 +47,7 @@ export default function WhoItsForSection() {
               <div className="relative w-full h-48 sm:h-56 mb-8 rounded-[8px] overflow-hidden border border-[#E6E8EC]">
                 <Image
                   src="/individuals_help.jpg"
-                  alt="Person reviewing legal documents"
+                  alt="Individual consulting with an experienced lawyer"
                   fill
                   className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 />
@@ -90,7 +90,7 @@ export default function WhoItsForSection() {
               <div className="relative w-full h-48 sm:h-56 mb-8 rounded-[8px] overflow-hidden border border-[#E6E8EC]">
                 <Image
                   src="/lawyers_office.jpg"
-                  alt="Professional lawyer working at desk"
+                  alt="Experienced lawyer reviewing case briefs in modern law firm"
                   fill
                   className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 />

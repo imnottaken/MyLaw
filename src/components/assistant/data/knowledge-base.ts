@@ -138,7 +138,7 @@ export const KNOWLEDGE_ITEMS: readonly KnowledgeItem[] = [
       "MyLaw is designed to help people discover and connect with legal professionals. The MyLaw Assistant doesn't provide legal advice.",
     isDisclaimer: true,
     cta: {
-      label: 'Join the Waitlist →',
+      label: 'Join the Waitlist',
       href: '/waitlist'
     },
     followUpIds: ['help-finding-lawyer', 'help-consultation', 'core-what-is-mylaw']
@@ -176,7 +176,7 @@ export const KNOWLEDGE_ITEMS: readonly KnowledgeItem[] = [
     answer:
       'Practicing lawyers and chambers can apply for our early access cohort. We are onboarding founding legal partners across key practice areas ahead of our public launch.',
     cta: {
-      label: 'Join Lawyer Waitlist →',
+      label: 'Join Lawyer Waitlist',
       href: '/waitlist?role=lawyer',
       role: 'lawyer'
     },
@@ -189,7 +189,7 @@ export const KNOWLEDGE_ITEMS: readonly KnowledgeItem[] = [
     answer:
       'MyLaw gives practitioners a curated, professional digital presence, connects you directly with qualified clients seeking your specific domain expertise, and streamlines initial intake communication.',
     cta: {
-      label: 'Join Lawyer Waitlist →',
+      label: 'Join Lawyer Waitlist',
       href: '/waitlist?role=lawyer',
       role: 'lawyer'
     },
@@ -202,7 +202,7 @@ export const KNOWLEDGE_ITEMS: readonly KnowledgeItem[] = [
     answer:
       'Applicants must hold a valid, unrestricted practicing certificate in their jurisdiction, possess professional indemnity coverage, and have demonstrated expertise in their declared practice areas.',
     cta: {
-      label: 'Join Lawyer Waitlist →',
+      label: 'Join Lawyer Waitlist',
       href: '/waitlist?role=lawyer',
       role: 'lawyer'
     },
@@ -217,7 +217,7 @@ export const KNOWLEDGE_ITEMS: readonly KnowledgeItem[] = [
     answer:
       'MyLaw is currently in pre-launch. We are rolling out private beta access in phased cohorts. You can join the early access waitlist to secure priority access when your practice area opens.',
     cta: {
-      label: 'Join the Waitlist →',
+      label: 'Join the Waitlist',
       href: '/waitlist'
     },
     followUpIds: ['launch-early-access', 'core-what-is-mylaw', 'lawyer-joining']
@@ -229,7 +229,7 @@ export const KNOWLEDGE_ITEMS: readonly KnowledgeItem[] = [
     answer:
       'Waitlist members receive priority invitations to our early access release, product updates, and founding member benefits for both individuals and legal practitioners.',
     cta: {
-      label: 'Join the Waitlist →',
+      label: 'Join the Waitlist',
       href: '/waitlist'
     },
     followUpIds: ['launch-timeline', 'core-is-it-free', 'help-finding-lawyer']
@@ -241,7 +241,7 @@ export const KNOWLEDGE_ITEMS: readonly KnowledgeItem[] = [
     answer:
       'We are launching initially across major metropolitan commercial and regional legal centers, with progressive nationwide expansion following our beta release.',
     cta: {
-      label: 'Join the Waitlist →',
+      label: 'Join the Waitlist',
       href: '/waitlist'
     },
     followUpIds: ['launch-timeline', 'core-what-is-mylaw', 'lawyer-joining']

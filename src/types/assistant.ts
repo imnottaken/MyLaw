@@ -38,6 +38,7 @@ export interface ChatMessage {
   readonly text: string;
   readonly timestamp: number;
   readonly isDisclaimer?: boolean;
+  readonly isAnimated?: boolean;
   readonly cta?: AssistantCTA;
   readonly followUpIds?: readonly string[];
 }

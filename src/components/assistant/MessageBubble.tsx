@@ -7,6 +7,7 @@ import { ArrowRightIcon, ShieldIcon } from "@/components/icons";
 
 export interface MessageBubbleProps {
   message: ChatMessage;
+  onAnimated?: (id: string) => void;
   onCtaClick?: (cta: AssistantCTA) => void;
 }
 
@@ -15,16 +16,19 @@ export interface MessageBubbleProps {
  * Renders individual chat message entries.
  * - User selection bubbles: Right-aligned (#285A8E, #FFFFFF)
  * - Assistant answer bubbles: Left-aligned with animated typewriter effect
+ * - Only animates newly generated messages once; past/history messages render instantly.
  * - Legal disclaimer callout with statutory compliance
  * - Inline waitlist CTA button routing to /waitlist or /waitlist?role=lawyer
  */
-export function MessageBubble({ message, onCtaClick }: MessageBubbleProps) {
+export function MessageBubble({ message, onAnimated, onCtaClick }: MessageBubbleProps) {
   const isUser = message.sender === "user";
-  const [displayedText, setDisplayedText] = useState(() => (isUser ? message.text : ""));
-  const [isTypingComplete, setIsTypingComplete] = useState(() => isUser);
+  const shouldAnimate = !isUser && message.isAnimated === false;
+
+  const [displayedText, setDisplayedText] = useState(() => (shouldAnimate ? "" : message.text));
+  const [isTypingComplete, setIsTypingComplete] = useState(() => !shouldAnimate);
 
   useEffect(() => {
-    if (isUser) return;
+    if (!shouldAnimate) return;
 
     // Fast, natural AI typewriter effect (~14ms per char)
     let currentIndex = 0;
@@ -38,11 +42,12 @@ export function MessageBubble({ message, onCtaClick }: MessageBubbleProps) {
       if (currentIndex >= fullText.length) {
         clearInterval(timer);
         setIsTypingComplete(true);
+        onAnimated?.(message.id);
       }
     }, typingInterval);
 
     return () => clearInterval(timer);
-  }, [message.text, isUser]);
+  }, [message.text, message.id, shouldAnimate, onAnimated]);
 
   if (isUser) {
     return (

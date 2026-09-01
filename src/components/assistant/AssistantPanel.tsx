@@ -16,6 +16,7 @@ export interface AssistantPanelProps {
   onClose: () => void;
   onSelectQuestion: (questionId: string) => void;
   onResetToInitial: () => void;
+  onMessageAnimated?: (id: string) => void;
   onCtaClick?: (cta: AssistantCTA) => void;
 }
 
@@ -36,6 +37,7 @@ export function AssistantPanel({
   onClose,
   onSelectQuestion,
   onResetToInitial,
+  onMessageAnimated,
   onCtaClick
 }: AssistantPanelProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -110,7 +112,11 @@ export function AssistantPanel({
               key={msg.id}
               ref={isLastUser ? lastUserMsgRef : isLastAsst ? lastAsstMsgRef : undefined}
             >
-              <MessageBubble message={msg} onCtaClick={onCtaClick} />
+              <MessageBubble
+                message={msg}
+                onAnimated={onMessageAnimated}
+                onCtaClick={onCtaClick}
+              />
             </div>
           );
         })}

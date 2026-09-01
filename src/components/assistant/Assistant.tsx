@@ -41,6 +41,7 @@ export default function Assistant({ className = "", onCtaClick }: AssistantProps
           id: `greeting-${Date.now()}`,
           sender: "assistant",
           text: greeting,
+          isAnimated: true,
           timestamp: Date.now()
         }
       ]);
@@ -62,6 +63,13 @@ export default function Assistant({ className = "", onCtaClick }: AssistantProps
       handleOpen();
     }
   }, [isOpen, handleClose, handleOpen]);
+
+  // Mark message as animated once typewriter finishes
+  const handleMessageAnimated = useCallback((messageId: string) => {
+    setMessages((prev) =>
+      prev.map((m) => (m.id === messageId ? { ...m, isAnimated: true } : m))
+    );
+  }, []);
 
   // Handle ESC key listener globally when panel is open
   useEffect(() => {
@@ -92,6 +100,7 @@ export default function Assistant({ className = "", onCtaClick }: AssistantProps
       id: `user-${Date.now()}`,
       sender: "user",
       text: item.question,
+      isAnimated: true,
       timestamp: Date.now()
     };
 
@@ -109,6 +118,7 @@ export default function Assistant({ className = "", onCtaClick }: AssistantProps
         sender: "assistant",
         text: item.answer,
         isDisclaimer: Boolean(item.isDisclaimer),
+        isAnimated: false,
         cta: item.cta,
         followUpIds: item.followUpIds,
         timestamp: Date.now()
@@ -146,6 +156,7 @@ export default function Assistant({ className = "", onCtaClick }: AssistantProps
         onClose={handleClose}
         onSelectQuestion={handleSelectQuestion}
         onResetToInitial={handleResetToInitial}
+        onMessageAnimated={handleMessageAnimated}
         onCtaClick={onCtaClick}
       />
     </div>

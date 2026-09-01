@@ -68,25 +68,25 @@ export function AssistantPanel({
       role="dialog"
       aria-labelledby="assistant-panel-title"
       aria-modal="false"
-      className="fixed bottom-20 right-4 sm:bottom-22 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[380px] max-h-[580px] flex flex-col bg-[#131B2E]/95 backdrop-blur-xl border border-white/15 rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.08)] overflow-hidden transition-all duration-200 ease-out"
+      className="fixed bottom-20 right-4 sm:bottom-22 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[380px] max-h-[580px] flex flex-col bg-[#F3F7FA] border border-[#D2DFEB] rounded-[16px] shadow-[0_16px_48px_rgba(23,32,51,0.16),0_2px_8px_rgba(23,32,51,0.06)] overflow-hidden transition-all duration-200 ease-out"
     >
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3.5 bg-[#172033]/90 border-b border-white/10 select-none">
+      <header className="flex items-center justify-between px-4 py-3.5 bg-[#E6EFF6] border-b border-[#D0DDE8] select-none">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-[#285A8E]/30 border border-[#285A8E]/40 text-[#60A5FA] flex items-center justify-center shadow-inner">
+          <div className="w-7 h-7 rounded-full bg-[#285A8E] text-white flex items-center justify-center shadow-sm">
             <BotIcon className="w-4 h-4" />
           </div>
-          <h2 id="assistant-panel-title" className="text-sm font-semibold text-white flex items-center gap-2">
+          <h2 id="assistant-panel-title" className="text-sm font-semibold text-[#172033] flex items-center gap-2">
             <span>MyLaw</span>
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#2F7C78] shadow-[0_0_6px_#2F7C78]" aria-hidden="true" />
-            <span className="text-slate-300 font-normal">Assistant</span>
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#2F7C78]" aria-hidden="true" />
+            <span className="text-[#5A6E85] font-normal">Assistant</span>
           </h2>
         </div>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close assistant"
-          className="p-1.5 rounded-[6px] text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285A8E]"
+          className="p-1.5 rounded-[6px] text-[#667085] hover:text-[#172033] hover:bg-[#D5E2EC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285A8E]"
         >
           <CloseIcon className="w-4 h-4" />
         </button>
@@ -116,17 +116,17 @@ export function AssistantPanel({
 
         {/* Transition indicator */}
         {isTransitioning && (
-          <div className="flex justify-start items-center gap-1.5 py-2 px-3.5 rounded-[12px] bg-[#1E293B] border border-white/10 w-fit shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#60A5FA] animate-bounce [animation-delay:-0.3s]" />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#60A5FA] animate-bounce [animation-delay:-0.15s]" />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#60A5FA] animate-bounce" />
+          <div className="flex justify-start items-center gap-1.5 py-2 px-3.5 rounded-[12px] bg-white border border-[#D5E1EC] w-fit shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#285A8E] animate-bounce [animation-delay:-0.3s]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#285A8E] animate-bounce [animation-delay:-0.15s]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#285A8E] animate-bounce" />
           </div>
         )}
 
         {/* Question Selector Area */}
         {!isTransitioning && (
           <div className="pt-2 space-y-2">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-[#526B84]">
               {activeQuestionId ? "Suggested Next Questions" : "Choose a topic"}
             </div>
             <div className="space-y-1.5">
@@ -146,7 +146,7 @@ export function AssistantPanel({
                 <button
                   type="button"
                   onClick={onResetToInitial}
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-[#60A5FA] hover:text-white px-2.5 py-1 rounded-[6px] bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285A8E]"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#285A8E] hover:text-[#1E4670] px-2.5 py-1 rounded-[6px] bg-[#E3EDF5] hover:bg-[#D5E3EE] border border-[#CBDCE9] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285A8E]"
                 >
                   <span>←</span>
                   <span>Back to questions</span>
@@ -158,8 +158,8 @@ export function AssistantPanel({
       </div>
 
       {/* Micro-Disclaimer Footer */}
-      <footer className="px-3.5 py-2 bg-[#0D1322] border-t border-white/10 text-center select-none">
-        <p className="text-[11px] text-slate-400 font-normal leading-tight">
+      <footer className="px-3.5 py-2 bg-[#E6EFF6] border-t border-[#D0DDE8] text-center select-none">
+        <p className="text-[11px] text-[#5A6E85] font-normal leading-tight">
           {MICRO_DISCLAIMER_TEXT}
         </p>
       </footer>

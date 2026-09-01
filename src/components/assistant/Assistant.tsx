@@ -98,7 +98,7 @@ export default function Assistant({ className = "", onCtaClick }: AssistantProps
     setMessages((prev) => [...prev, userMsg]);
     setIsTransitioning(true);
 
-    // 2. Smooth Transition (180ms delay)
+    // 2. Realistic AI Typing Simulation Transition (1.3s delay)
     if (transitionTimerRef.current) {
       clearTimeout(transitionTimerRef.current);
     }
@@ -117,7 +117,7 @@ export default function Assistant({ className = "", onCtaClick }: AssistantProps
       setMessages((prev) => [...prev, assistantMsg]);
       setActiveQuestionId(item.id);
       setIsTransitioning(false);
-    }, 180);
+    }, 1300);
   }, []);
 
   // Handle "← Back to questions"

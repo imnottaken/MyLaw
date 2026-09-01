@@ -41,14 +41,15 @@ export function AssistantPanel({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const lastUserMsgRef = useRef<HTMLDivElement>(null);
   const lastAsstMsgRef = useRef<HTMLDivElement>(null);
+  const typingRef = useRef<HTMLDivElement>(null);
 
   // Smart auto-scroll: ensures the reader sees the question and answer without skipping past it
   useEffect(() => {
     if (!isOpen) return;
 
-    if (isTransitioning && lastUserMsgRef.current) {
-      // Scroll to user message when submitted
-      lastUserMsgRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (isTransitioning && typingRef.current) {
+      // Scroll to typing indicator when user asks a question
+      typingRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
     } else if (!isTransitioning && messages.length > 0) {
       // When assistant message arrives, smoothly bring the assistant answer into view
       if (lastAsstMsgRef.current) {
@@ -114,12 +115,16 @@ export function AssistantPanel({
           );
         })}
 
-        {/* Transition indicator */}
+        {/* Transition indicator (3 jumping dots simulating typing) */}
         {isTransitioning && (
-          <div className="flex justify-start items-center gap-1.5 py-2 px-3.5 rounded-[12px] bg-white border border-[#D5E1EC] w-fit shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#285A8E] animate-bounce [animation-delay:-0.3s]" />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#285A8E] animate-bounce [animation-delay:-0.15s]" />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#285A8E] animate-bounce" />
+          <div
+            ref={typingRef}
+            className="flex items-center gap-1.5 py-3 px-4 rounded-[14px] rounded-tl-[4px] bg-white border border-[#D5E1EC] w-fit shadow-[0_1px_3px_rgba(16,24,40,0.04)]"
+            aria-label="Assistant is typing"
+          >
+            <span className="w-2 h-2 rounded-full bg-[#285A8E] animate-bounce [animation-duration:0.8s] [animation-delay:-0.32s]" />
+            <span className="w-2 h-2 rounded-full bg-[#285A8E] animate-bounce [animation-duration:0.8s] [animation-delay:-0.16s]" />
+            <span className="w-2 h-2 rounded-full bg-[#285A8E] animate-bounce [animation-duration:0.8s]" />
           </div>
         )}
 

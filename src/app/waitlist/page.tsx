@@ -44,9 +44,18 @@ export default function WaitlistPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="text-xl font-bold tracking-tight text-white hover:text-white/80 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 rounded-sm"
+            className="flex items-center gap-2.5 hover:opacity-85 transition-opacity duration-150"
           >
-            MyLaw
+            <Image
+              src="/logo mylaw.jpeg"
+              alt="MyLaw logo"
+              width={32}
+              height={32}
+              className="rounded-full object-cover border border-white/30"
+            />
+            <span className="text-xl font-bold tracking-tight text-white">
+              MyLaw
+            </span>
           </Link>
           <Link
             href="/"

@@ -15,13 +15,13 @@ export default function AboutSection() {
               We&apos;re building a better starting point for legal help.
             </h2>
 
-            {/* Editorial Pull-Quote Callout */}
+            {/* Editorial Mission Callout */}
             <div className="mt-8 border-l-2 border-[#2F7C78] pl-4 py-1">
-              <p className="text-base sm:text-lg font-medium text-[#172033] italic leading-snug">
-                &ldquo;A platform founded on transparency, dignity, and accessibility in legal guidance.&rdquo;
+              <p className="text-base sm:text-lg font-medium text-[#172033] leading-snug">
+                &ldquo;Our mission is to empower individuals and businesses with quick access to legal information, document support, and experienced lawyers, helping them resolve legal matters with confidence.&rdquo;
               </p>
               <span className="block mt-2 text-xs font-semibold tracking-wider uppercase text-[#2F7C78]">
-                — The MyLaw Standard
+                — The MyLaw Mission
               </span>
             </div>
           </div>

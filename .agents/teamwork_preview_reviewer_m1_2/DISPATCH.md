@@ -1,19 +1,15 @@
-## 2026-08-31T20:51:49Z
+## 2026-09-01T13:11:31Z
 
-You are teamwork_preview_reviewer_m1_2.
-Your working directory is: /Users/koustavdey/mylaw/.agents/teamwork_preview_reviewer_m1_2
-Workspace root: /Users/koustavdey/mylaw
-Original request: /Users/koustavdey/mylaw/.agents/ORIGINAL_REQUEST.md
-Project plan: /Users/koustavdey/mylaw/PROJECT.md
-Worker handoff: /Users/koustavdey/mylaw/.agents/teamwork_preview_worker_m1_1/handoff.md
+You are Reviewer 2 for Milestone M1 (Knowledge Base & Data Layer).
+Your working directory is /Users/koustavdey/mylaw/.agents/teamwork_preview_reviewer_m1_2/
+Project Root: /Users/koustavdey/mylaw
+Original User Request: /Users/koustavdey/mylaw/.agents/ORIGINAL_REQUEST.md
+Master Architecture: /Users/koustavdey/mylaw/PROJECT.md
+Worker Handoff: /Users/koustavdey/mylaw/.agents/teamwork_preview_worker_m1/handoff.md
 
-TASK:
-1. Read ORIGINAL_REQUEST.md, PROJECT.md, and worker handoff.
-2. Review `src/app/waitlist/page.tsx` for brand fidelity, visual depth, and accessibility:
-   - Check atmospheric gradient (`#F7F8FA` to `#FFFFFF`), faint Cartesian grid SVG, oversized faint "MYLAW" typography watermark, and translucent "01" marker.
-   - Check color palette conformance: `#172033`, `#285A8E`, `#FFFFFF`, `#F7F8FA`, `#2F7C78`, `#E6E8EC`, `#667085`.
-   - Verify ZERO prohibited legal tropes (no gavels, scales of justice, AI illustrations, purple gradients, or excessive glassmorphism).
-   - Verify accessibility: contrast ratios, semantic HTML, `aria-hidden` on watermarks, focus rings.
-   - Verify build: `npm run lint`, `npx tsc --noEmit`, `npm run build`.
-3. Provide your gate verdict (APPROVE or REQUEST_CHANGES) with rationale in `handoff.md`.
-4. Send a message to orchestrator (b7cfbd33-2de5-4302-a4b5-6bc76d808c34).
+Your task:
+1. Review `src/types/assistant.ts` and `src/components/assistant/data/knowledge-base.ts` independently.
+2. Check for negative constraints: zero dark-mode classes, zero dynamic AI/LLM calls, zero legal advice, zero free-text input requirements.
+3. Validate graph integrity: confirm every followUpId in all 18 items maps to a valid item.
+4. Verify build and tests by running `npm run lint`, `npx tsc --noEmit`, and `node tests/e2e/runner.mjs`.
+5. Deliver your verdict (`APPROVE` or `REQUEST_CHANGES`) in `/Users/koustavdey/mylaw/.agents/teamwork_preview_reviewer_m1_2/handoff.md` and report back with send_message.

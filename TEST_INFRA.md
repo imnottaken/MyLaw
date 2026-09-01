@@ -1,39 +1,51 @@
-# E2E Test Infra: MyLaw Waitlist Redesign
+# E2E Test Infra: MyLaw Assistant Chatbot
 
 ## Test Philosophy
-- Opaque-box, requirement-driven. No dependency on implementation internal state.
-- Methodology: Category-Partition + Boundary Value Analysis + Pairwise Interactions + Real-World Workload Testing.
+- Opaque-box, requirement-driven. Derived from `ORIGINAL_REQUEST.md` and user-facing specifications.
+- Methodology: Category-Partition + Boundary Value Analysis (BVA) + Pairwise Interaction Testing + Real-World Workload Scenarios.
+- Native Node.js ESM harness executing in <3 seconds without heavy external browser dependencies.
 
 ## Feature Inventory
-| # | Feature | Source | Tier 1 | Tier 2 | Tier 3 | Tier 4 |
-|---|---------|--------|:------:|:------:|:------:|:------:|
-| 1 | Asymmetric Split Desktop Layout | ORIGINAL_REQUEST §R1 | 5 | 5 | ✓ | ✓ |
-| 2 | Mobile Responsive Stacking | ORIGINAL_REQUEST §R1 | 5 | 5 | ✓ | ✓ |
-| 3 | Atmospheric Depth & Gradient | ORIGINAL_REQUEST §R1, §R3 | 5 | 5 | ✓ | ✓ |
-| 4 | Dedicated Navbar & Minimal Footer | ORIGINAL_REQUEST §R2 | 5 | 5 | ✓ | ✓ |
-| 5 | Brand Aesthetic Integrity (No Gavels/Scales) | ORIGINAL_REQUEST §R3 | 5 | 5 | ✓ | ✓ |
-| 6 | Cohesive Waitlist Input & Button (48-52px) | ORIGINAL_REQUEST §R4 | 5 | 5 | ✓ | ✓ |
-| 7 | Custom Role Selectable Blocks | ORIGINAL_REQUEST §R4 | 5 | 5 | ✓ | ✓ |
-| 8 | Client-Side Success State Transition | ORIGINAL_REQUEST §R4 | 5 | 5 | ✓ | ✓ |
-| 9 | Snappy Micro-interactions & Arrow Motion | ORIGINAL_REQUEST §R5 | 5 | 5 | ✓ | ✓ |
-| 10 | Landing Page Isolation & Integrity | ORIGINAL_REQUEST Acceptance | 5 | 5 | ✓ | ✓ |
+| # | Feature | Source | Tier 1 (Coverage) | Tier 2 (Boundary) | Tier 3 (Cross-Feature) | Tier 4 (Scenario) |
+|---|---|---|:---:|:---:|:---:|:---:|
+| 1 | `CHAT-TRIGGER` (48-56px button, tooltip, brand styling) | ORIGINAL_REQUEST §R1 | 5 | 3 | 2 | 2 |
+| 2 | `CHAT-PANEL` (360-400px panel, header "MyLaw ● Assistant", close) | ORIGINAL_REQUEST §R1 | 5 | 3 | 2 | 1 |
+| 3 | `CHAT-KB-SCOPE` (15-20 items across 5 categories) | ORIGINAL_REQUEST §R2 | 5 | 3 | 1 | 1 |
+| 4 | `CHAT-GREETING` (Random intro greeting on open) | ORIGINAL_REQUEST §R2 | 3 | 2 | 1 | 1 |
+| 5 | `CHAT-INITIAL-Q` (5 initial question bubbles with chevrons) | ORIGINAL_REQUEST §R2 | 4 | 2 | 1 | 2 |
+| 6 | `CHAT-QA-FLOW` (User bubble -> smooth transition -> Assistant answer) | ORIGINAL_REQUEST §R2 | 5 | 3 | 2 | 3 |
+| 7 | `CHAT-FOLLOWUP` (2-3 follow-ups + "← Back to questions") | ORIGINAL_REQUEST §R2 | 4 | 3 | 2 | 2 |
+| 8 | `CHAT-GUARDRAILS` (No free-text input, no dynamic AI generation) | ORIGINAL_REQUEST §R2 | 3 | 3 | 1 | 2 |
+| 9 | `CHAT-DISCLAIMER` (Exact legal advice disclaimer & footer) | ORIGINAL_REQUEST §R2 | 3 | 3 | 1 | 2 |
+| 10 | `CHAT-WAITLIST-CTA` (Inline CTA button -> /waitlist, no duplicate form) | ORIGINAL_REQUEST §R3 | 4 | 2 | 3 | 2 |
+| 11 | `CHAT-A11Y-POLISH` (ESC key, Tab focus, ARIA, mobile responsiveness) | ORIGINAL_REQUEST §R4 | 5 | 4 | 3 | 2 |
+| 12 | `CHAT-LAYOUT-INTEGR` (Non-destructive global layout in layout.tsx) | ORIGINAL_REQUEST §R4 | 3 | 2 | 3 | 2 |
 
 ## Test Architecture
-- Test runner: `tests/e2e/runner.mjs` (invoked via `npm test`)
-- Reports: `tests/e2e/report.json`
-- Passing semantics: Exit code 0, 100% tests pass, zero errors.
+- **Master Runner**: `tests/e2e/runner.mjs` (invoked via `node tests/e2e/runner.mjs` or `npm test`)
+- **Helper Modules**:
+  - `tests/e2e/helpers/assistant-simulator.mjs`: High-fidelity state machine and conversation simulator.
+  - `tests/e2e/helpers/source-scanner.mjs`: AST/regex scanner for tokens, negative assertions (no dark:, no dynamic AI, no free-text input, disclaimer text verification).
+  - `tests/e2e/helpers/dom-parser.mjs`: Fast HTML parser.
+  - `tests/e2e/helpers/http-client.mjs`: Live HTTP server runner.
+- **Tier Files**:
+  - `tests/e2e/tier1-feature-coverage.test.mjs`: Tiers 1 tests for all features.
+  - `tests/e2e/tier2-boundary-corner.test.mjs`: Boundary, edge cases, debounce, ESC key, negative assertions.
+  - `tests/e2e/tier3-cross-feature.test.mjs`: Route navigation, z-index layering, mobile breakpoints.
+  - `tests/e2e/tier4-scenarios-negative.test.mjs`: 5 realistic multi-step user journeys & guardrails.
 
 ## Real-World Application Scenarios (Tier 4)
 | # | Scenario | Features Exercised | Complexity |
-|---|----------|--------------------|------------|
-| 1 | End-to-end user navigation from landing to waitlist, role selection, submission, success message verification | F1, F4, F6, F7, F8 | Medium |
-| 2 | Mobile viewport rendering with direct URL query parameters (`?role=lawyer`) preselection and submission | F2, F7, F8, F9 | Medium |
-| 3 | Accessibility & screen reader compatibility (form labels, ARIA live region, keyboard navigation) | F6, F7, F8 | Medium |
-| 4 | Visual brand fidelity & negative scan (zero forbidden symbols, correct brand colors, typography watermarks) | F3, F5 | Medium |
-| 5 | Landing page non-regression suite (verifying `/` sections, navbar, and CTA links remain unmodified) | F10 | Medium |
+|---|---|---|---|
+| 1 | Consumer Discovery & Clarity Journey | Trigger, Tooltip, Panel, Greeting, Q&A, Follow-ups, Back to questions, Close | High |
+| 2 | Lawyer Onboarding & Waitlist Conversion | Trigger, Q&A, Inline CTA, Route to `/waitlist?role=lawyer`, Waitlist form submission | High |
+| 3 | Legal Advice Guardrail & Disclaimer | Trigger, Legal query selection, Exact disclaimer verification, No AI calls | Medium |
+| 4 | Keyboard-Only Accessibility & Focus | Tab navigation, Enter to open, Space to select, ESC to dismiss & focus restore | Medium |
+| 5 | Mobile Viewport Touch & Dismiss | Mobile layout, No overflow, Responsive padding, Close button | Medium |
 
 ## Coverage Thresholds
-- Tier 1: ≥5 per feature
-- Tier 2: ≥5 per feature (boundary and corner cases)
-- Tier 3: Pairwise coverage of major feature interactions
-- Tier 4: ≥5 realistic application scenarios
+- Tier 1: ≥5 per feature (~50 tests)
+- Tier 2: ≥3-5 per feature (~30 tests)
+- Tier 3: Pairwise coverage of route, layering, and viewport combinations (~15 tests)
+- Tier 4: 5 realistic application-level scenarios
+- Total: 100+ assertions verifying 100% of acceptance criteria

@@ -1,11 +1,16 @@
-## 2026-08-31T20:51:49Z
+## 2026-09-01T13:11:31Z
+You are Reviewer 1 for Milestone M1 (Knowledge Base & Data Layer).
+Your working directory is /Users/koustavdey/mylaw/.agents/teamwork_preview_reviewer_m1_1/
+Project Root: /Users/koustavdey/mylaw
+Original User Request: /Users/koustavdey/mylaw/.agents/ORIGINAL_REQUEST.md
+Master Architecture: /Users/koustavdey/mylaw/PROJECT.md
+Worker Handoff: /Users/koustavdey/mylaw/.agents/teamwork_preview_worker_m1/handoff.md
 
-TASK:
-1. Read ORIGINAL_REQUEST.md, PROJECT.md, and worker handoff.
-2. Review the implementation of `src/app/waitlist/page.tsx`:
-   - Verify asymmetric desktop split layout (`lg:grid-cols-12`) and clean mobile vertical stacking.
-   - Verify dedicated navbar (logo + "← Back to Home") and minimal footer (brand, Privacy, Terms, Contact links, copyright text).
-   - Verify that landing page files (`src/app/page.tsx`, `src/components/landing/*`, `src/components/Navbar.tsx`) remain 100% untouched.
-   - Verify build and tests by running `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
-3. Provide your gate verdict (APPROVE or REQUEST_CHANGES) with rationale in `handoff.md`.
-4. Send a message to orchestrator (b7cfbd33-2de5-4302-a4b5-6bc76d808c34).
+Your task:
+1. Review `src/types/assistant.ts` and `src/components/assistant/data/knowledge-base.ts`.
+2. Verify TypeScript strict typing and interface contracts.
+3. Verify that all 18 items exist across the 5 categories (`core`, `why-mylaw`, `for-seeking-help`, `for-lawyers`, `launch`).
+4. Verify the 4 randomized intro greetings, 5 initial questions, exact legal disclaimer, and micro-disclaimer footer.
+5. Verify build and type checking by running `npx tsc --noEmit` and `npm run build`.
+6. Run the E2E test suite with `node tests/e2e/runner.mjs`.
+7. Deliver your verdict (`APPROVE` or `REQUEST_CHANGES`) in `/Users/koustavdey/mylaw/.agents/teamwork_preview_reviewer_m1_1/handoff.md` and report back with send_message.

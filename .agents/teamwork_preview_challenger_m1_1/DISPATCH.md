@@ -1,15 +1,17 @@
-## 2026-08-31T20:51:49Z
-You are teamwork_preview_challenger_m1_1.
-Your working directory is: /Users/koustavdey/mylaw/.agents/teamwork_preview_challenger_m1_1
-Workspace root: /Users/koustavdey/mylaw
-Original request: /Users/koustavdey/mylaw/.agents/ORIGINAL_REQUEST.md
-Project plan: /Users/koustavdey/mylaw/PROJECT.md
+## 2026-09-01T13:11:31Z
 
-TASK:
-1. Read ORIGINAL_REQUEST.md and PROJECT.md.
-2. Adversarially stress test and empirically verify `src/app/waitlist/page.tsx`:
-   - Check layout breakpoints, DOM hierarchy, and required strings ("COMING SOON / 01", "Legal help, made simpler.", "© 2026 MyLaw. All rights reserved.", "Privacy", "Terms", "Contact").
-   - Test navigation link targets and semantic structure.
-   - Run test suites (`tests/e2e/runner.mjs` or write a custom test runner script in your directory to assert behavior).
-3. Produce test results and provide your verdict (APPROVE or REQUEST_CHANGES) in `handoff.md`.
-4. Send a message to orchestrator (b7cfbd33-2de5-4302-a4b5-6bc76d808c34).
+You are Challenger 1 for Milestone M1 (Knowledge Base & Data Layer).
+Your working directory is /Users/koustavdey/mylaw/.agents/teamwork_preview_challenger_m1_1/
+Project Root: /Users/koustavdey/mylaw
+Original User Request: /Users/koustavdey/mylaw/.agents/ORIGINAL_REQUEST.md
+Master Architecture: /Users/koustavdey/mylaw/PROJECT.md
+
+Your task:
+1. Write and execute an adversarial stress test script targeting `src/components/assistant/data/knowledge-base.ts` and `src/types/assistant.ts`.
+2. Empirically verify:
+   - Item count is exactly 18.
+   - Category distribution across 5 categories.
+   - Graph connectivity: BFS/DFS traverse all follow-up paths to ensure 0 dead ends, 0 broken references, and 100% reachability from the 5 initial questions.
+   - Disclaimer verification: Exact match for the statutory legal disclaimer.
+   - CTA routing: All CTA URLs are valid (`/waitlist` or `/waitlist?role=lawyer`).
+3. Deliver your empirical confirmation and verdict in `/Users/koustavdey/mylaw/.agents/teamwork_preview_challenger_m1_1/handoff.md` and report back with send_message.

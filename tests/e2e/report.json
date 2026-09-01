@@ -1,209 +1,305 @@
 {
-  "timestamp": "2026-08-31T20:51:12.922Z",
+  "timestamp": "2026-09-01T13:50:50.853Z",
   "baseUrl": "http://localhost:3000",
   "tiers": {
     "tier1": [
       {
-        "name": "Tier 1.01: Landing page loads successfully and returns HTTP 200",
+        "name": "Tier 1.01: [CHAT-TRIGGER] Floating trigger button dimensions and fixed bottom-right position",
         "passed": true,
-        "durationMs": 72
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.02: Landing page contains all 7 required sections in order",
+        "name": "Tier 1.02: [CHAT-TRIGGER] Trigger button brand styling, sparkle icon, and active pulse indicator",
         "passed": true,
-        "durationMs": 33
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.03: Hero Section displays Eyebrow, Headline, and Supporting Copy",
+        "name": "Tier 1.03: [CHAT-TRIGGER] Hover tooltip displays \"Ask MyLaw\" with accessible ARIA label",
         "passed": true,
-        "durationMs": 27
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.04: Hero Section displays Dual CTAs (Join the Waitlist & Learn More)",
+        "name": "Tier 1.04: [CHAT-PANEL] Chat panel opens with header \"MyLaw ● Assistant\" and active status dot",
         "passed": true,
-        "durationMs": 33
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.05: Hero Section displays coded UI Mockup Panel (search bar, practice area tags)",
-        "passed": false,
-        "error": "Mockup preview must include practice area category tags",
-        "stack": "AssertionError [ERR_ASSERTION]: Mockup preview must include practice area category tags\n    at file:///Users/koustavdey/mylaw/tests/e2e/tier1-feature-coverage.test.mjs:99:12\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async test (file:///Users/koustavdey/mylaw/tests/e2e/tier1-feature-coverage.test.mjs:11:7)\n    at async Object.runTier1Tests [as runner] (file:///Users/koustavdey/mylaw/tests/e2e/tier1-feature-coverage.test.mjs:91:3)\n    at async main (file:///Users/koustavdey/mylaw/tests/e2e/runner.mjs:119:25)",
-        "durationMs": 29
-      },
-      {
-        "name": "Tier 1.06: How It Works section contains 01, 02, 03 step sequence",
+        "name": "Tier 1.05: [CHAT-PANEL] Chat panel geometry (360-400px width desktop), 12-16px radius, and close action",
         "passed": true,
-        "durationMs": 25
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.07: Why MyLaw section contains 4 principles (Clarity, Choice, Trust, Accessibility)",
+        "name": "Tier 1.06: [CHAT-PANEL] Panel contains persistent micro-disclaimer footer",
         "passed": true,
-        "durationMs": 27
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.08: Who It's For section contains Individual and Lawyer panels with dedicated CTAs",
+        "name": "Tier 1.07: [CHAT-KB-SCOPE] Knowledge base contains exactly 18 predefined Q&A items",
         "passed": true,
-        "durationMs": 28
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.09: Section backgrounds alternate rhythmically between white (#FFFFFF) and soft grey (#F7F8FA)",
+        "name": "Tier 1.08: [CHAT-KB-SCOPE] Knowledge base spans all 5 required categories with complete items",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 1.09: [CHAT-KB-SCOPE] Follow-up graph integrity: all follow-up IDs map to existing items",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 1.10: [CHAT-GREETING] Selection from 4 distinct curated friendly greetings on open",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 1.11: [CHAT-GREETING] Random greeting selection produces valid non-empty greeting on open",
         "passed": true,
         "durationMs": 1
       },
       {
-        "name": "Tier 1.10: Sticky Navbar contains Wordmark, Nav Links, Join Waitlist CTA, and Mobile Hamburger",
+        "name": "Tier 1.12: [CHAT-INITIAL-Q] Exactly 5 initial question bubbles displayed on open",
         "passed": true,
-        "durationMs": 25
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.11: Footer contains MyLaw Wordmark, Tagline, Links, and Copyright Notice",
+        "name": "Tier 1.13: [CHAT-INITIAL-Q] 5 initial questions cover top platform domains with chevron/pill styling",
         "passed": true,
-        "durationMs": 25
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.12: Waitlist page (/waitlist) loads successfully with centered layout & COMING SOON eyebrow",
+        "name": "Tier 1.14: [CHAT-QA-FLOW] Question click renders user message bubble -> transition -> assistant answer bubble",
         "passed": true,
-        "durationMs": 57
+        "durationMs": 201
       },
       {
-        "name": "Tier 1.13: Waitlist page contains Email input with type=\"email\" and required attribute",
+        "name": "Tier 1.15: [CHAT-QA-FLOW] Message bubble visual alignment & color styling contracts",
         "passed": true,
-        "durationMs": 17
+        "durationMs": 0
       },
       {
-        "name": "Tier 1.14: Waitlist page contains Optional Role selector (Looking for legal help / Lawyer)",
+        "name": "Tier 1.16: [CHAT-FOLLOWUP] Active answer displays 2-3 contextual follow-up questions",
         "passed": true,
-        "durationMs": 17
+        "durationMs": 201
       },
       {
-        "name": "Tier 1.15: Waitlist page contains Submit button and Privacy microcopy",
+        "name": "Tier 1.17: [CHAT-FOLLOWUP] \"← Back to questions\" resets active selection and restores top 5 questions",
         "passed": true,
-        "durationMs": 16
+        "durationMs": 201
+      },
+      {
+        "name": "Tier 1.18: [CHAT-GUARDRAILS] Strictly zero interactive free-text inputs in Assistant components",
+        "passed": true,
+        "durationMs": 4
+      },
+      {
+        "name": "Tier 1.19: [CHAT-GUARDRAILS] Strictly zero dynamic AI/LLM SDK calls across codebase",
+        "passed": true,
+        "durationMs": 8
+      },
+      {
+        "name": "Tier 1.20: [CHAT-DISCLAIMER] Legal advice query triggers exact verbatim statutory disclaimer",
+        "passed": true,
+        "durationMs": 202
+      },
+      {
+        "name": "Tier 1.21: [CHAT-WAITLIST-CTA] Relevant answers render inline CTA button routing to /waitlist",
+        "passed": true,
+        "durationMs": 202
+      },
+      {
+        "name": "Tier 1.22: [CHAT-WAITLIST-CTA] Lawyer onboarding answer renders inline CTA routing to /waitlist?role=lawyer",
+        "passed": true,
+        "durationMs": 201
+      },
+      {
+        "name": "Tier 1.23: [BASELINE] Landing page loads with HTTP 200 and all 7 editorial sections intact",
+        "passed": true,
+        "durationMs": 87
+      },
+      {
+        "name": "Tier 1.24: [BASELINE] Landing page hero displays eyebrow, headline, copy, and dual CTAs",
+        "passed": true,
+        "durationMs": 33
+      },
+      {
+        "name": "Tier 1.25: [BASELINE] Waitlist page (/waitlist) loads with HTTP 200, COMING SOON, and Waitlist Form",
+        "passed": true,
+        "durationMs": 37
       }
     ],
     "tier2": [
       {
-        "name": "Tier 2.01: Empty email input is rejected by validation",
+        "name": "Tier 2.01: Rapid toggle spamming (50 open/close cycles) preserves deterministic state",
         "passed": true,
-        "durationMs": 0
-      },
-      {
-        "name": "Tier 2.02: Malformed email strings are rejected by validation",
-        "passed": true,
-        "durationMs": 0
-      },
-      {
-        "name": "Tier 2.03: Email with leading and trailing whitespace is sanitized and accepted",
-        "passed": true,
-        "durationMs": 51
-      },
-      {
-        "name": "Tier 2.04: Submission succeeds without selecting optional role",
-        "passed": true,
-        "durationMs": 51
-      },
-      {
-        "name": "Tier 2.05: Submitting with explicit role preserves selected role value",
-        "passed": true,
-        "durationMs": 103
-      },
-      {
-        "name": "Tier 2.06: Rapid double submission is handled cleanly without duplicate execution",
-        "passed": true,
-        "durationMs": 51
-      },
-      {
-        "name": "Tier 2.07: Light mode strictly enforced with zero dark-mode media query rules in globals.css",
-        "passed": false,
-        "error": "globals.css contains dark mode overrides: hasDarkMediaQuery=false, hasDarkModeClassOverrides=true\n\nfalse !== true\n",
-        "stack": "AssertionError [ERR_ASSERTION]: globals.css contains dark mode overrides: hasDarkMediaQuery=false, hasDarkModeClassOverrides=true\n\nfalse !== true\n\n    at file:///Users/koustavdey/mylaw/tests/e2e/tier2-boundary-corner.test.mjs:108:12\n    at test (file:///Users/koustavdey/mylaw/tests/e2e/tier2-boundary-corner.test.mjs:16:13)\n    at Object.runTier2Tests [as runner] (file:///Users/koustavdey/mylaw/tests/e2e/tier2-boundary-corner.test.mjs:106:9)\n    at async main (file:///Users/koustavdey/mylaw/tests/e2e/runner.mjs:119:25)",
         "durationMs": 1
+      },
+      {
+        "name": "Tier 2.02: ESC key dismisses panel at initial greeting state and restores focus",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.03: ESC key dismisses panel during active question/answer state",
+        "passed": true,
+        "durationMs": 201
+      },
+      {
+        "name": "Tier 2.04: ESC key press when panel is closed does not alter closed state",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.05: Multi-level follow-up traversal -> Back button restores initial 5 questions cleanly",
+        "passed": true,
+        "durationMs": 403
+      },
+      {
+        "name": "Tier 2.06: Selecting invalid or nonexistent question ID fails gracefully without exception",
+        "passed": true,
+        "durationMs": 1
+      },
+      {
+        "name": "Tier 2.07: Light mode strictly enforced with zero dark: classes in UI components",
+        "passed": true,
+        "durationMs": 4
       },
       {
         "name": "Tier 2.08: Design tokens in globals.css match exact design spec values",
         "passed": true,
+        "durationMs": 1
+      },
+      {
+        "name": "Tier 2.09: Root layout configures Inter Google font with latin subset",
+        "passed": true,
         "durationMs": 0
       },
       {
-        "name": "Tier 2.09: Root layout configures Inter Google font",
-        "passed": true,
-        "durationMs": 0
-      },
-      {
-        "name": "Tier 2.10: Responsive classes are implemented for mobile (single-col) and desktop (multi-col)",
-        "passed": true,
-        "durationMs": 50
-      }
-    ],
-    "tier3": [
-      {
-        "name": "Tier 3.01: Landing page defines section ID targets corresponding to navbar links (#about, #how-it-works, #for-lawyers)",
-        "passed": true,
-        "durationMs": 36
-      },
-      {
-        "name": "Tier 3.02: Navbar navigation anchors correctly map to corresponding landing page sections",
-        "passed": true,
-        "durationMs": 25
-      },
-      {
-        "name": "Tier 3.03: All primary CTA buttons across Landing sections route to /waitlist",
-        "passed": true,
-        "durationMs": 27
-      },
-      {
-        "name": "Tier 3.04: Hero secondary CTA \"Learn More\" connects to #how-it-works section",
-        "passed": true,
-        "durationMs": 23
-      },
-      {
-        "name": "Tier 3.05: Section 05 \"I'm a Lawyer\" CTA routes to /waitlist with role intent",
-        "passed": true,
-        "durationMs": 22
-      },
-      {
-        "name": "Tier 3.06: Waitlist page header and/or back button connects back to homepage (/)",
-        "passed": true,
-        "durationMs": 16
-      },
-      {
-        "name": "Tier 3.07: Waitlist page successfully renders when navigated with query parameter /waitlist?role=lawyer",
-        "passed": true,
-        "durationMs": 14
-      }
-    ],
-    "tier4": [
-      {
-        "name": "Tier 4.01: Full Consumer Journey — Landing discovery -> Waitlist -> Individual role -> Submission -> Success State",
-        "passed": true,
-        "durationMs": 95
-      },
-      {
-        "name": "Tier 4.02: Full Lawyer Journey — Landing \"For Lawyers\" -> Waitlist -> Lawyer role -> Submission -> Success State",
-        "passed": true,
-        "durationMs": 92
-      },
-      {
-        "name": "Tier 4.03: Negative Brand Check — Complete absence of gavels, scales of justice, and courtroom tropes",
+        "name": "Tier 2.10: Guardrail verification: zero interactive text inputs and zero dynamic AI calls",
         "passed": true,
         "durationMs": 3
       },
       {
-        "name": "Tier 4.04: Negative Brand Check — Complete absence of fake statistics and fabricated testimonials",
+        "name": "Tier 2.11: Empty email input is rejected by waitlist validation",
         "passed": true,
         "durationMs": 1
       },
       {
-        "name": "Tier 4.05: Negative Brand Check — Complete absence of black/gold luxury styles and purple AI hype gradients",
+        "name": "Tier 2.12: Malformed email strings are rejected by waitlist validation",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.13: Email with leading and trailing whitespace is trimmed and accepted",
+        "passed": true,
+        "durationMs": 52
+      },
+      {
+        "name": "Tier 2.14: Submitting without selecting optional role succeeds with role as null",
+        "passed": true,
+        "durationMs": 51
+      },
+      {
+        "name": "Tier 2.15: Rapid double submission is handled cleanly without duplicate execution",
+        "passed": true,
+        "durationMs": 52
+      }
+    ],
+    "tier3": [
+      {
+        "name": "Tier 3.01: [CROSS-PAGE] Assistant conversational state operates seamlessly across / and /waitlist",
+        "passed": true,
+        "durationMs": 98
+      },
+      {
+        "name": "Tier 3.02: [INLINE-CTA] Assistant answer CTA cleanly routes to /waitlist and /waitlist?role=lawyer",
+        "passed": true,
+        "durationMs": 467
+      },
+      {
+        "name": "Tier 3.03: [Z-INDEX] Assistant overlay hierarchy ensures panel appears above Navbar without clipping",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 3.04: [RESPONSIVE] Mobile fluid margin styles prevent horizontal overflow",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 3.05: [LAYOUT-INTEGR] Global mounting in layout.tsx preserves root html/body structure",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 3.06: [ANCHORS] Landing page section targets (#about, #how-it-works, #for-lawyers) are defined",
+        "passed": true,
+        "durationMs": 33
+      },
+      {
+        "name": "Tier 3.07: [RETURN-NAV] Waitlist page header provides link returning to homepage (/)",
+        "passed": true,
+        "durationMs": 18
+      },
+      {
+        "name": "Tier 3.08: [ROLE-QUERY] /waitlist?role=lawyer renders successfully without 500 or hydration errors",
+        "passed": true,
+        "durationMs": 18
+      }
+    ],
+    "tier4": [
+      {
+        "name": "Tier 4.01: [SCENARIO 1] Full Consumer Journey: Landing -> Trigger -> Greeting -> Q&A -> Follow-up -> Back -> Dismiss",
+        "passed": true,
+        "durationMs": 431
+      },
+      {
+        "name": "Tier 4.02: [SCENARIO 2] Full Lawyer Journey: Landing -> Assistant -> Lawyer Q&A -> Inline CTA -> /waitlist -> Submit",
+        "passed": true,
+        "durationMs": 306
+      },
+      {
+        "name": "Tier 4.03: [SCENARIO 3] Legal Advice Guardrail: User asks for legal advice -> Strict statutory disclaimer delivered",
+        "passed": true,
+        "durationMs": 201
+      },
+      {
+        "name": "Tier 4.04: [SCENARIO 4] Keyboard-Only Navigation: Enter to open -> Tab navigation -> ESC to dismiss & focus restore",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 4.05: [SCENARIO 5] Mobile Touch & Fluid Viewport: Responsive touch target (48-56px) & zero page overflow",
+        "passed": true,
+        "durationMs": 65
+      },
+      {
+        "name": "Tier 4.06: [NEGATIVE] Complete absence of gavels, scales of justice, and courtroom tropes",
+        "passed": true,
+        "durationMs": 3
+      },
+      {
+        "name": "Tier 4.07: [NEGATIVE] Complete absence of fake statistics and fabricated testimonials",
         "passed": true,
         "durationMs": 1
+      },
+      {
+        "name": "Tier 4.08: [NEGATIVE] Complete absence of luxury black/gold and purple AI hype gradients",
+        "passed": true,
+        "durationMs": 2
+      },
+      {
+        "name": "Tier 4.09: [NEGATIVE] Complete absence of dynamic AI endpoints or API keys",
+        "passed": true,
+        "durationMs": 2
       }
     ]
   },
   "summary": {
-    "total": 37,
-    "passed": 35,
-    "failed": 2,
-    "durationMs": 3092
+    "total": 57,
+    "passed": 57,
+    "failed": 0,
+    "durationMs": 5961
   }
 }

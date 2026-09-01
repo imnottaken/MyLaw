@@ -1,99 +1,72 @@
-# Milestone 1 Layout Blueprint Handoff Report
+# Milestone M1 Exploration Handoff Report: Knowledge Base & Data Layer
 
-**Agent**: `teamwork_preview_explorer_m1_1`  
-**Working Directory**: `/Users/koustavdey/mylaw/.agents/teamwork_preview_explorer_m1_1`  
-**Date**: 2026-08-31 / 2026-09-01  
-**Handoff Type**: Hard (Task complete)  
+**Agent**: teamwork_preview_explorer_m1_1  
+**Milestone**: M1 (Knowledge Base & Data Layer)  
+**Date**: 2026-09-01T13:07:30Z  
+**Target Files**: `src/types/assistant.ts` and `src/components/assistant/data/knowledge-base.ts`  
 
 ---
 
 ## 1. Observation
 
-1. **Original Request Requirements (`.agents/ORIGINAL_REQUEST.md`)**:
-   - Lines 12-20:
-     - R1: "Redesign `/waitlist` using an asymmetric split layout on desktop (stacking naturally on mobile). The left side must feature the headline ('Legal help, made simpler.'), a small eyebrow ('COMING SOON / 01'), and a concise brand statement. The right side must feature a refined waitlist panel containing the form. The page must use a subtle navy-to-blue atmospheric gradient or tinted background area behind the hero, while keeping the overall page primarily light."
-     - R2: "Implement a clean navbar specific to this page: MyLaw logo/wordmark on the left, and a '← Back to Home' link on the right. Implement a minimal footer at the bottom containing only the brand name, Privacy, Terms, Contact links, and copyright text."
-     - R3: "Introduce subtle visual depth using elements like faint oversized 'MYLAW' typography, large translucent '01' numbering, thin editorial lines, or a subtle grid pattern. Strictly avoid gavels, scales of justice, AI illustrations, and excessive glassmorphism. Adhere to the established color palette (Primary: `#172033`, Accent: `#285A8E`, Background: `#FFFFFF`, Soft: `#F7F8FA`)."
+1. **`ORIGINAL_REQUEST.md` (§R2, §R3)**:
+   - Line 15-20: *"Implement an internal question-response database (15–20 predefined items categorized across Core, Why MyLaw, For Seeking Help, For Lawyers, and Launch). On open, show one of several friendly intro messages picked randomly, followed by 5 initial question bubbles... When a user clicks a question: 1. Render user selection bubble, 2. Render assistant answer bubble with smooth transition, 3. Offer 2–3 relevant follow-up questions and a '← Back to questions' option. Strictly enforce no free-text input, no dynamic AI generation, and no legal advice. If a legal-advice-related question is triggered, return the standard disclaimer: 'MyLaw is designed to help people discover and connect with legal professionals. The MyLaw Assistant doesn't provide legal advice.'"*
+   - Line 23: *"For relevant answers (e.g., Launch, Early access, Lawyer onboarding), include an inline CTA button ('Want to be among the first? [ Join the Waitlist → ]') that routes to `/waitlist`."*
 
-2. **Project Architecture & Contracts (`PROJECT.md`)**:
-   - Lines 6-9: `/waitlist` (`src/app/waitlist/page.tsx`): Dedicated coming soon / waitlist page with asymmetric desktop split layout, atmospheric gradient, subtle editorial watermarks and lines, dedicated navbar, and minimal footer.
-   - Lines 41-47: Interface Contract: `WaitlistForm.tsx` exported as default component, wrapped in `<Suspense>`, preserving client-side query handling and accessibility (`role="status"`, `aria-live="polite"`).
+2. **`PROJECT.md` (§Architecture, §Interface Contracts)**:
+   - Line 4-7: *"Next.js 16.3.3 (App Router, Turbopack), React 19.2.8, TypeScript strict... 100% deterministic predefined Q&A database (18 items across 5 categories), random greeting selector, structured follow-up question graph, inline waitlist CTA integration, zero dynamic AI/LLM calls, zero free-text input, exact legal advice disclaimer."*
+   - Line 49-76: Defines `AssistantCategory`, `AssistantCTA`, `KnowledgeItem`, and `ChatMessage`.
 
-3. **Current State of `src/app/waitlist/page.tsx`**:
-   - Lines 56-81: Currently uses a single-column centered flex container (`max-w-xl mx-auto text-center`) lacking the required 12-column asymmetric desktop split.
-   - Line 62: Eyebrow badge currently displays `"COMING SOON"` without the `" / 01"` index and early access indicator.
-   - Line 84-89: Footer currently contains only copyright and motto, lacking Privacy, Terms, and Contact links.
-   - Lines 14-35: Background contains only an SVG grid, lacking the vertical atmospheric gradient (`#F7F8FA` to `#FFFFFF`), the oversized `"MYLAW"` watermark typography, and the translucent `"01"` card marker.
+3. **`src/components/waitlist/WaitlistForm.tsx` (Line 10-25)**:
+   - Form parses query param `role`: values `'lawyer'`, `'attorney'`, `'professional'` select Lawyer; values `'help'`, `'individual'`, `'client'`, `'seeker'` select Individual.
+   - Waitlist route support: `/waitlist` (default/individual) and `/waitlist?role=lawyer` (lawyer role).
 
-4. **Design Token & Test Suite Rules (`tests/challenger_phase3_visual_design.test.mjs`, `tests/e2e/tier1-feature-coverage.test.mjs`)**:
-   - Component hex colors must strictly belong to authorized set (`#FFFFFF`, `#F7F8FA`, `#172033`, `#285A8E`, `#1e4670`, `#2F7C78`, `#F6F3EC`, `#E6E8EC`, `#667085`).
-   - All transition durations must be `<= 250ms`.
-   - Zero `dark:` classes or dark-mode media queries.
-   - Zero prohibited tropes (gavels, scales, fake statistics).
+4. **`spec_report.md` in `.agents/teamwork_preview_spec_miner_requirements/`**:
+   - 18 Q&A items cataloged across 5 categories, 4 greetings, and 5 initial question IDs.
 
 ---
 
 ## 2. Logic Chain
 
-1. **Layout Transformation**:
-   - Observation 1 & 3 show that `src/app/waitlist/page.tsx` is currently a narrow centered container.
-   - To achieve the required desktop asymmetry while preserving mobile ergonomics, the main container is transformed to `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8` containing `lg:grid lg:grid-cols-12 gap-12 lg:gap-16 items-center`.
-   - Left column (`lg:col-span-7`) houses the editorial hero elements, typography watermark, eyebrow badge, headline, accent line, brand description, and value pillar grid.
-   - Right column (`lg:col-span-5`) houses the elevated card panel wrapping `<WaitlistForm />` with a translucent `"01"` index marker.
-
-2. **Mobile Stacking Harmony**:
-   - By leveraging CSS Grid with `lg:` breakpoint overrides, mobile devices collapse naturally into a clean single-column vertical flow with top-to-bottom reading hierarchy (hero first, interactive form card second) without excessive empty vertical gaps.
-
-3. **Atmospheric Depth & Editorial Nuance**:
-   - To provide depth while maintaining a crisp light theme, three subtle layers are composed:
-     a) Vertical gradient background: `bg-gradient-to-b from-[#F7F8FA] via-white to-white`
-     b) Low-opacity architectural grid SVG (3.5% opacity)
-     c) Faint typography watermark (`MYLAW` at `text-[#172033]/[0.025]`) and translucent numeric marker (`01` at `text-[#285A8E]/10`).
-
-4. **Navbar & Footer Completeness**:
-   - The dedicated header renders a sticky container with `MyLaw` wordmark (`href="/"`) and `← Back to Home` (`href="/"`).
-   - The minimal footer renders brand name, copyright notice (`© 2026 MyLaw. All rights reserved.`), legal links (`Privacy`, `Terms`, `Contact`), and brand motto (`Legal help, simplified.`).
-
-5. **Design System & Test Safety**:
-   - Every color in the proposed code uses authorized hex codes.
-   - Every transition uses `duration-150`.
-   - No landing page files are modified.
+1. **Observation 1 & 2** establish that the assistant must operate strictly on predefined data with zero runtime generation or free-text inputs.
+2. Therefore, the data layer must provide a strongly-typed, comprehensive knowledge graph consisting of 18 items across the 5 required categories (`core`, `why-mylaw`, `for-seeking-help`, `for-lawyers`, `launch`).
+3. **Observation 1** mandates that every node provides 2–3 follow-up question IDs and that initial state renders 5 top-level questions.
+4. **Observation 3** confirms that waitlist routing must differentiate between regular seekers (`/waitlist`) and legal practitioners (`/waitlist?role=lawyer`), allowing inline CTA buttons to pre-select the appropriate waitlist tab/state.
+5. All 18 items have been cross-linked such that 100% of follow-up IDs are valid, non-cyclic for single-step repeats, and always offer a fallback path back to the main menu.
+6. The exact statutory disclaimer has been verified and embedded verbatim in the legal advice item response and micro-footer.
 
 ---
 
 ## 3. Caveats
 
-1. **Milestone Boundary**: This plan governs `src/app/waitlist/page.tsx` (Milestone 1). The internal form logic, radio button styling to custom UI blocks, and button micro-interactions in `src/components/waitlist/WaitlistForm.tsx` are governed by Milestone 2.
-2. **Untouched Files**: `src/app/page.tsx` and `src/components/landing/*` must remain untouched to satisfy integrity constraints.
+- The current Next.js application has `strict: true` in `tsconfig.json`. All type definitions use `readonly` arrays and explicit optional properties to ensure zero compiler warnings or runtime mutability errors.
+- The assistant operates entirely on client-side state; no backend database migrations or API endpoints are required for M1.
 
 ---
 
 ## 4. Conclusion
 
-The layout architecture for Milestone 1 is fully specified and blueprinted in `.agents/teamwork_preview_explorer_m1_1/m1_layout_plan.md`. The design satisfies all requirements of `ORIGINAL_REQUEST.md` (§R1, §R2, §R3) and conforms strictly to existing E2E and adversarial challenger test assertions.
+Milestone M1 specification and data structures are fully defined and ready for immediate implementation:
+1. `src/types/assistant.ts` contains all TypeScript interfaces (`AssistantCategory`, `AssistantCategoryMeta`, `AssistantCTA`, `KnowledgeItem`, `ChatMessage`, `AssistantState`, `AssistantAction`).
+2. `src/components/assistant/data/knowledge-base.ts` contains:
+   - `CATEGORIES` (5 categories)
+   - `GREETINGS` (4 friendly introductory messages)
+   - `INITIAL_QUESTION_IDS` (5 top-level question IDs)
+   - `LEGAL_DISCLAIMER_TEXT` & `MICRO_DISCLAIMER_TEXT` (verbatim required strings)
+   - `KNOWLEDGE_ITEMS` (18 complete Q&A items with 3 follow-ups each and appropriate CTA metadata)
+   - Data access helpers (`getKnowledgeItemById`, `getInitialQuestions`, `getFollowUpQuestions`, `getRandomGreeting`).
 
-The worker agent implementing Milestone 1 can apply the drop-in replacement code in `m1_layout_plan.md` to `src/app/waitlist/page.tsx`.
+Full specification artifact delivered at:
+`/Users/koustavdey/mylaw/.agents/teamwork_preview_explorer_m1_1/m1_exploration.md`
 
 ---
 
 ## 5. Verification Method
 
-To independently verify the implementation after applying the blueprint:
-
-1. **Static Lint & Type Check**:
-   ```bash
-   npm run lint
-   npx tsc --noEmit
-   ```
-2. **Next.js Production Build**:
-   ```bash
-   npm run build
-   ```
-3. **E2E & Challenger Test Execution**:
-   ```bash
-   node tests/e2e/runner.mjs
-   node tests/challenger_phase3_visual_design.test.mjs
-   node tests/challenger_final_adversarial.test.mjs
-   ```
-4. **Visual & Structural Inspection**:
-   - Verify `src/app/waitlist/page.tsx` contains `lg:grid lg:grid-cols-12`, `COMING SOON / 01`, `Legal help, made simpler.`, `MYLAW` watermark, and minimal footer links (`Privacy`, `Terms`, `Contact`).
+1. **Static Type Checking**:
+   - Verify `src/types/assistant.ts` and `src/components/assistant/data/knowledge-base.ts` compile cleanly with `npm run build` or `npx tsc --noEmit`.
+2. **Data Integrity Script / Node REPL**:
+   - Check that `KNOWLEDGE_ITEMS.length === 18`.
+   - Check that all `followUpIds` in every item exist within `KNOWLEDGE_ITEMS`.
+   - Check that `INITIAL_QUESTION_IDS.length === 5` and all 5 exist.
+   - Verify `LEGAL_DISCLAIMER_TEXT === "MyLaw is designed to help people discover and connect with legal professionals. The MyLaw Assistant doesn't provide legal advice."`

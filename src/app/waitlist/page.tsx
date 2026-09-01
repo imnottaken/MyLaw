@@ -115,32 +115,12 @@ export default function WaitlistPage() {
               </div>
             </div>
 
-            {/* Right Column: Elevated Waitlist Card Container (lg:col-span-5) */}
+            {/* Right Column: Waitlist Card (lg:col-span-5) */}
             <div className="lg:col-span-5 w-full mt-8 lg:mt-0 relative">
-              <div className="bg-white/[0.97] backdrop-blur-sm border border-white/20 rounded-[10px] sm:rounded-[14px] p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.25)] relative overflow-hidden text-[#172033]">
-                {/* Translucent "01" Index Marker */}
-                <div
-                  className="pointer-events-none absolute top-4 right-5 text-2xl font-mono font-bold text-[#285A8E]/10 select-none"
-                  aria-hidden="true"
-                >
-                  01
-                </div>
-
-                {/* Card Title & Description */}
-                <div className="mb-6 space-y-1.5">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#285A8E] uppercase tracking-wider">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2F7C78]" />
-                    <span>Priority Access</span>
-                  </div>
-                  <h2 className="text-xl sm:text-2xl font-semibold text-[#172033] tracking-tight">
-                    Join the Waitlist
-                  </h2>
-                  <p className="text-xs sm:text-sm text-[#667085]">
-                    Be among the first to experience MyLaw when we launch. Select your role for tailored early access.
-                  </p>
-                </div>
-
-                {/* Interactive Waitlist Form Component */}
+              <div className="bg-white/[0.97] backdrop-blur-sm border border-white/20 rounded-[10px] sm:rounded-[14px] p-6 sm:p-8 shadow-[0_8px_32px_rgba(0,0,0,0.25)] text-[#172033]">
+                <h2 className="text-lg sm:text-xl font-semibold text-[#172033] tracking-tight mb-5">
+                  Join the Waitlist
+                </h2>
                 <WaitlistForm />
               </div>
             </div>

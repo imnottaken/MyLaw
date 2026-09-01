@@ -28,4 +28,7 @@ export {
   Star as StarIcon,
   MapPin as MapPinIcon,
   ExternalLink as ExternalLinkIcon,
+  Bot as BotIcon,
+  MessageSquareDot as MessageSquareDotIcon,
+  MessageCircle as MessageCircleIcon,
 } from "lucide-react";

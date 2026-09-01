@@ -18,24 +18,29 @@ export default function WaitlistPage() {
           src="/waitlist-bg.jpg"
           alt=""
           fill
-          className="object-cover scale-105 blur-md"
+          className="object-cover scale-105 blur-md saturate-[0.6]"
           quality={75}
           priority
         />
       </div>
-      {/* Dark Navy Overlay */}
+      {/* Dark Navy Overlay — strengthened */}
       <div
-        className="pointer-events-none absolute inset-0 -z-20 bg-[#172033]/75"
+        className="pointer-events-none absolute inset-0 -z-20 bg-[#172033]/82"
+        aria-hidden="true"
+      />
+      {/* Navy Color Tint — reduces warmth */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-15 bg-[#1a2540]/25 mix-blend-multiply"
         aria-hidden="true"
       />
       {/* Subtle Radial Highlight — adds depth */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_50%_at_30%_40%,rgba(40,90,142,0.15),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_50%_at_30%_40%,rgba(40,90,142,0.12),transparent_70%)]"
         aria-hidden="true"
       />
-      {/* Subtle Warm Vignette Edges */}
+      {/* Vignette — strengthened */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_100%_100%_at_50%_50%,transparent_40%,rgba(23,32,51,0.5)_100%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_100%_100%_at_50%_50%,transparent_30%,rgba(23,32,51,0.6)_100%)]"
         aria-hidden="true"
       />
 
@@ -117,28 +122,20 @@ export default function WaitlistPage() {
               </div>
             </div>
 
-            {/* Right Column: Elevated Waitlist Card Container (lg:col-span-5) */}
-            <div className="lg:col-span-5 w-full mt-8 lg:mt-0 relative">
-              <div className="bg-white/[0.97] backdrop-blur-sm border border-white/20 rounded-[10px] sm:rounded-[14px] p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.25)] relative overflow-hidden text-[#172033]">
-                {/* Translucent "01" Index Marker */}
-                <div
-                  className="pointer-events-none absolute top-4 right-5 text-2xl font-mono font-bold text-[#285A8E]/10 select-none"
-                  aria-hidden="true"
-                >
-                  01
-                </div>
-
-                {/* Card Title & Description */}
-                <div className="mb-6 space-y-1.5">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#285A8E] uppercase tracking-wider">
+            {/* Right Column: Refined Waitlist Card (lg:col-span-5) */}
+            <div className="lg:col-span-5 w-full mt-8 lg:mt-0 flex justify-center lg:justify-end">
+              <div className="w-full max-w-[460px] bg-white border border-[#E6E8EC]/60 rounded-[8px] sm:rounded-[10px] p-6 sm:p-7 shadow-[0_4px_24px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.06)] text-[#172033]">
+                {/* Card Header */}
+                <div className="mb-5 space-y-1.5">
+                  <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#285A8E] uppercase tracking-wider">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#2F7C78]" />
                     <span>Priority Access</span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-semibold text-[#172033] tracking-tight">
-                    Join the Waitlist
+                  <h2 className="text-lg sm:text-xl font-semibold text-[#172033] tracking-tight">
+                    Join the MyLaw waitlist
                   </h2>
-                  <p className="text-xs sm:text-sm text-[#667085]">
-                    Be among the first to experience MyLaw when we launch. Select your role for tailored early access.
+                  <p className="text-[13px] text-[#667085] leading-relaxed">
+                    Be the first to know when MyLaw launches.
                   </p>
                 </div>
 

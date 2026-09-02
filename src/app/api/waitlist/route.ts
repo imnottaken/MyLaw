@@ -234,11 +234,15 @@ export async function POST(request: NextRequest) {
         const personaLabel =
           resolvedUserType === "lawyer" ? "Lawyer / Practitioner" : "Individual";
 
-        // Admin alert email
-        if (adminEmail) {
+        // Admin alert email (supports multiple comma-separated recipients)
+        const adminRecipients = adminEmail
+          ? adminEmail.split(",").map((e) => e.trim()).filter(Boolean)
+          : [];
+
+        if (adminRecipients.length > 0) {
           await resend.emails.send({
             from: emailFrom,
-            to: adminEmail,
+            to: adminRecipients.length === 1 ? adminRecipients[0] : adminRecipients,
             subject: `🎉 New ${resolvedUserType === "lawyer" ? "Lawyer" : "Individual"} Waitlist Signup: ${trimmedEmail}`,
             html: `
               <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; color: #172033; max-width: 600px; margin: 0 auto; border: 1px solid #E6E8EC; border-radius: 8px; background: #FFFFFF;">

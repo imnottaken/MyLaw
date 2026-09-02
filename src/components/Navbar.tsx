@@ -39,7 +39,7 @@ export default function Navbar() {
               className="flex items-center gap-2.5 hover:opacity-85 transition-opacity duration-150"
             >
               <Image
-                src="/logo mylaw.jpeg"
+                src="/logo-square.png"
                 alt="MyLaw logo"
                 width={32}
                 height={32}

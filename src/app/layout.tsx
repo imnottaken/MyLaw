@@ -17,10 +17,11 @@ export const metadata: Metadata = {
   description: "A simpler way to discover and connect with the right legal professionals.",
   icons: {
     icon: [
-      { url: "/logo mylaw.jpeg" },
-      { url: "/logo-mylaw.jpeg" },
+      { url: "/favicon.ico" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo-square.png", type: "image/png" },
     ],
-    apple: "/logo mylaw.jpeg",
+    apple: "/apple-touch-icon.png",
   },
 };
 

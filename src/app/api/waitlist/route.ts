@@ -6,6 +6,7 @@ const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
 const emailFrom = process.env.EMAIL_FROM || "MyLaw <onboarding@resend.dev>";
+const googleSheetsWebhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,8 +31,10 @@ export async function POST(request: NextRequest) {
     }
 
     const sanitizedRole =
-      role === "help" || role === "lawyer" || role === "individual"
-        ? role
+      role === "lawyer"
+        ? "lawyer"
+        : role === "help" || role === "individual"
+        ? "help"
         : null;
 
     const userAgent = request.headers.get("user-agent") || undefined;
@@ -70,7 +73,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Send Email Notifications if Resend is configured
+    // 3. Sync to Google Sheets if configured
+    if (googleSheetsWebhookUrl) {
+      try {
+        fetch(googleSheetsWebhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            email: trimmedEmail,
+            role: sanitizedRole === "lawyer" ? "Lawyer" : sanitizedRole === "help" ? "Individual" : "Not specified",
+            source,
+            timestamp: new Date().toISOString(),
+          }),
+        }).catch((err) => console.error("Google Sheets async sync error:", err));
+      } catch (sheetErr) {
+        console.error("Google Sheets trigger error:", sheetErr);
+      }
+    }
+
+    // 4. Send Email Notifications if Resend is configured
     if (resend) {
       try {
         const roleLabel =

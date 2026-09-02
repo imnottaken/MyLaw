@@ -15,6 +15,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "MyLaw — Legal Help, Simplified",
   description: "A simpler way to discover and connect with the right legal professionals.",
+  icons: {
+    icon: [
+      { url: "/logo mylaw.jpeg" },
+      { url: "/logo-mylaw.jpeg" },
+    ],
+    apple: "/logo mylaw.jpeg",
+  },
 };
 
 export default function RootLayout({

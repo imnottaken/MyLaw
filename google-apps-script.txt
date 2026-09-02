@@ -1,0 +1,75 @@
+function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    
+    // Auto-create and style header row if sheet is fresh/empty
+    if (sheet.getLastRow() === 0) {
+      var headers = [
+        "Email", 
+        "Mobile", 
+        "User Type", 
+        "State Bar Council", 
+        "Enrollment Number", 
+        "Verification Status", 
+        "Source", 
+        "Date"
+      ];
+      sheet.appendRow(headers);
+      
+      // Style headers: Navy background, white bold text, freeze top row
+      var headerRange = sheet.getRange("A1:H1");
+      headerRange.setFontWeight("bold");
+      headerRange.setBackground("#172033");
+      headerRange.setFontColor("#FFFFFF");
+      headerRange.setHorizontalAlignment("center");
+      sheet.setFrozenRows(1);
+    }
+
+    var data = JSON.parse(e.postData.contents);
+    
+    var email = data.email || "";
+    var mobile = data.mobile || "";
+    var userType = (data.user_type === "lawyer" || data.role === "Lawyer") ? "Lawyer" : "Individual";
+    var barCouncil = data.bar_council_state || (userType === "Lawyer" ? "Pending" : "-");
+    var enrollmentNum = data.enrollment_number || (userType === "Lawyer" ? "Pending" : "-");
+    var verificationStatus = (userType === "Lawyer") ? (data.verification_status || "pending") : "-";
+    var source = data.source || "waitlist_page";
+    var date = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+    // Append the row to Google Sheets
+    sheet.appendRow([
+      email,
+      mobile,
+      userType,
+      barCouncil,
+      enrollmentNum,
+      verificationStatus,
+      source,
+      date
+    ]);
+
+    // Send instant email notification to both admins directly via Google MailApp
+    try {
+      var adminEmails = "koustavdey75@gmail.com, Lochanraghavendra@ai-ind.co.in";
+      var subject = "🎉 New " + userType + " Waitlist Signup: " + email;
+      var body = "A new " + userType + " just joined the MyLaw waitlist!\n\n" +
+                 "• Email: " + email + "\n" +
+                 "• Mobile: " + mobile + "\n" +
+                 "• User Type: " + userType + "\n" +
+                 (userType === "Lawyer" ? ("• State Bar Council: " + barCouncil + "\n• Enrollment Number: " + enrollmentNum + "\n") : "") +
+                 "• Date: " + date + "\n\n" +
+                 "— MyLaw Waitlist Engine";
+
+      MailApp.sendEmail(adminEmails, subject, body);
+    } catch (mailErr) {
+      // Log error if mail fails
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ status: "success" }))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}

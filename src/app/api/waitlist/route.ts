@@ -234,70 +234,74 @@ export async function POST(request: NextRequest) {
         const personaLabel =
           resolvedUserType === "lawyer" ? "Lawyer / Practitioner" : "Individual";
 
-        // Admin alert email (supports multiple comma-separated recipients)
+        // Admin alert email (sends to each recipient independently)
         const adminRecipients = adminEmail
           ? adminEmail.split(",").map((e) => e.trim()).filter(Boolean)
           : [];
 
         if (adminRecipients.length > 0) {
-          await resend.emails.send({
-            from: emailFrom,
-            to: adminRecipients.length === 1 ? adminRecipients[0] : adminRecipients,
-            subject: `🎉 New ${resolvedUserType === "lawyer" ? "Lawyer" : "Individual"} Waitlist Signup: ${trimmedEmail}`,
-            html: `
-              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; color: #172033; max-width: 600px; margin: 0 auto; border: 1px solid #E6E8EC; border-radius: 8px; background: #FFFFFF;">
-                <div style="margin-bottom: 20px;">
-                  <h2 style="color: #285A8E; margin: 0 0 8px 0; font-size: 20px;">New Waitlist Registration</h2>
-                  <p style="color: #667085; font-size: 14px; margin: 0;">A new ${personaLabel.toLowerCase()} has joined the MyLaw waitlist.</p>
-                </div>
-                
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;">
-                  <tr style="border-bottom: 1px solid #F0F2F5;">
-                    <td style="padding: 10px 0; color: #667085; width: 160px;">Email:</td>
-                    <td style="padding: 10px 0; font-weight: 600; color: #172033;">${trimmedEmail}</td>
-                  </tr>
-                  <tr style="border-bottom: 1px solid #F0F2F5;">
-                    <td style="padding: 10px 0; color: #667085;">Mobile:</td>
-                    <td style="padding: 10px 0; font-weight: 600; color: #172033;">${sanitizedMobile}</td>
-                  </tr>
-                  <tr style="border-bottom: 1px solid #F0F2F5;">
-                    <td style="padding: 10px 0; color: #667085;">User Type:</td>
-                    <td style="padding: 10px 0; font-weight: 600; color: #285A8E;">${personaLabel}</td>
-                  </tr>
-                  ${
-                    resolvedUserType === "lawyer"
-                      ? `
-                  <tr style="border-bottom: 1px solid #F0F2F5;">
-                    <td style="padding: 10px 0; color: #667085;">State Bar Council:</td>
-                    <td style="padding: 10px 0; font-weight: 600; color: #172033;">${validatedBarCouncilState}</td>
-                  </tr>
-                  <tr style="border-bottom: 1px solid #F0F2F5;">
-                    <td style="padding: 10px 0; color: #667085;">Enrollment Number:</td>
-                    <td style="padding: 10px 0; font-weight: 600; color: #172033;">${validatedEnrollmentNumber}</td>
-                  </tr>
-                  <tr style="border-bottom: 1px solid #F0F2F5;">
-                    <td style="padding: 10px 0; color: #667085;">Verification Status:</td>
-                    <td style="padding: 10px 0; font-weight: 600; color: #D97706;">Pending Review</td>
-                  </tr>
-                  `
-                      : ""
-                  }
-                  <tr style="border-bottom: 1px solid #F0F2F5;">
-                    <td style="padding: 10px 0; color: #667085;">Source:</td>
-                    <td style="padding: 10px 0; color: #172033;">${sanitizedSource}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px 0; color: #667085;">Date:</td>
-                    <td style="padding: 10px 0; color: #172033;">${new Date().toUTCString()}</td>
-                  </tr>
-                </table>
+          await Promise.allSettled(
+            adminRecipients.map((recipient) =>
+              resend.emails.send({
+                from: emailFrom,
+                to: recipient,
+                subject: `🎉 New ${resolvedUserType === "lawyer" ? "Lawyer" : "Individual"} Waitlist Signup: ${trimmedEmail}`,
+                html: `
+                  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; color: #172033; max-width: 600px; margin: 0 auto; border: 1px solid #E6E8EC; border-radius: 8px; background: #FFFFFF;">
+                    <div style="margin-bottom: 20px;">
+                      <h2 style="color: #285A8E; margin: 0 0 8px 0; font-size: 20px;">New Waitlist Registration</h2>
+                      <p style="color: #667085; font-size: 14px; margin: 0;">A new ${personaLabel.toLowerCase()} has joined the MyLaw waitlist.</p>
+                    </div>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;">
+                      <tr style="border-bottom: 1px solid #F0F2F5;">
+                        <td style="padding: 10px 0; color: #667085; width: 160px;">Email:</td>
+                        <td style="padding: 10px 0; font-weight: 600; color: #172033;">${trimmedEmail}</td>
+                      </tr>
+                      <tr style="border-bottom: 1px solid #F0F2F5;">
+                        <td style="padding: 10px 0; color: #667085;">Mobile:</td>
+                        <td style="padding: 10px 0; font-weight: 600; color: #172033;">${sanitizedMobile}</td>
+                      </tr>
+                      <tr style="border-bottom: 1px solid #F0F2F5;">
+                        <td style="padding: 10px 0; color: #667085;">User Type:</td>
+                        <td style="padding: 10px 0; font-weight: 600; color: #285A8E;">${personaLabel}</td>
+                      </tr>
+                      ${
+                        resolvedUserType === "lawyer"
+                          ? `
+                      <tr style="border-bottom: 1px solid #F0F2F5;">
+                        <td style="padding: 10px 0; color: #667085;">State Bar Council:</td>
+                        <td style="padding: 10px 0; font-weight: 600; color: #172033;">${validatedBarCouncilState}</td>
+                      </tr>
+                      <tr style="border-bottom: 1px solid #F0F2F5;">
+                        <td style="padding: 10px 0; color: #667085;">Enrollment Number:</td>
+                        <td style="padding: 10px 0; font-weight: 600; color: #172033;">${validatedEnrollmentNumber}</td>
+                      </tr>
+                      <tr style="border-bottom: 1px solid #F0F2F5;">
+                        <td style="padding: 10px 0; color: #667085;">Verification Status:</td>
+                        <td style="padding: 10px 0; font-weight: 600; color: #D97706;">Pending Review</td>
+                      </tr>
+                      `
+                          : ""
+                      }
+                      <tr style="border-bottom: 1px solid #F0F2F5;">
+                        <td style="padding: 10px 0; color: #667085;">Source:</td>
+                        <td style="padding: 10px 0; color: #172033;">${sanitizedSource}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 10px 0; color: #667085;">Date:</td>
+                        <td style="padding: 10px 0; color: #172033;">${new Date().toUTCString()}</td>
+                      </tr>
+                    </table>
 
-                <div style="font-size: 12px; color: #94A3B8; text-align: center; border-top: 1px solid #E6E8EC; padding-top: 16px;">
-                  MyLaw Platform • Waitlist Engine
-                </div>
-              </div>
-            `,
-          });
+                    <div style="font-size: 12px; color: #94A3B8; text-align: center; border-top: 1px solid #E6E8EC; padding-top: 16px;">
+                      MyLaw Platform • Waitlist Engine
+                    </div>
+                  </div>
+                `,
+              })
+            )
+          );
         }
 
         // Subscriber welcome email (tailored for individual vs lawyer)

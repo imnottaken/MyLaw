@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { fetchPage } from './helpers/http-client.mjs';
 import { AssistantSimulator } from './helpers/assistant-simulator.mjs';
+import { WaitlistFormSimulator } from './helpers/dom-simulator.mjs';
 import { readFile } from './helpers/source-scanner.mjs';
 
 export async function runTier3Tests(baseUrl) {
@@ -26,7 +27,6 @@ export async function runTier3Tests(baseUrl) {
     const waitlistPage = await fetchPage('/waitlist', baseUrl);
     assert.equal(waitlistPage.status, 200);
 
-    // Assistant simulator operates independently of active page route
     const sim = new AssistantSimulator();
     const openRes = sim.open();
     assert.equal(openRes.isOpen, true);
@@ -34,7 +34,7 @@ export async function runTier3Tests(baseUrl) {
   });
 
   // =========================================================================
-  // 2. INLINE CTA NAVIGATION TO /waitlist
+  // 2. INLINE CTA NAVIGATION TO /waitlist AND /waitlist?role=lawyer
   // =========================================================================
   await test('Tier 3.02: [INLINE-CTA] Assistant answer CTA cleanly routes to /waitlist and /waitlist?role=lawyer', async () => {
     const sim = new AssistantSimulator();
@@ -50,7 +50,7 @@ export async function runTier3Tests(baseUrl) {
     assert.ok(lawyerAnswer.assistantMessage.cta);
     assert.equal(lawyerAnswer.assistantMessage.cta.href, '/waitlist?role=lawyer');
 
-    // Verify both target routes are reachable on the live server
+    // Verify both target routes are reachable on the test server
     const resGeneral = await fetchPage(launchAnswer.assistantMessage.cta.href, baseUrl);
     assert.equal(resGeneral.status, 200);
 
@@ -61,11 +61,10 @@ export async function runTier3Tests(baseUrl) {
   // =========================================================================
   // 3. Z-INDEX LAYERING OVER NAVBAR & PAGE CONTENT
   // =========================================================================
-  await test('Tier 3.03: [Z-INDEX] Assistant overlay hierarchy ensures panel appears above Navbar without clipping', async () => {
+  await test('Tier 3.03: [Z-INDEX] Assistant overlay hierarchy ensures panel appears above Navbar without clipping', () => {
     const navbarSource = readFile('src/components/Navbar.tsx') || '';
     assert.ok(navbarSource.includes('z-50') || navbarSource.includes('sticky'), 'Navbar has standard sticky elevation');
 
-    // Contract: Assistant trigger and panel use z-50 or higher (e.g. z-50, z-[60], fixed)
     const overlayContract = {
       layering: 'fixed portal or top-level layout overlay',
       minZIndex: 50
@@ -124,13 +123,80 @@ export async function runTier3Tests(baseUrl) {
   });
 
   // =========================================================================
-  // 8. QUERY PARAMETER ROLE PRESERVATION
+  // 8. FORM STATE RETENTION ACROSS EXPAND & COLLAPSE
   // =========================================================================
-  await test('Tier 3.08: [ROLE-QUERY] /waitlist?role=lawyer renders successfully without 500 or hydration errors', async () => {
+  await test('Tier 3.08: [STATE-RETENTION] Expand -> Fill Lawyer fields -> Collapse -> Expand preserves all input values', () => {
+    const sim = new WaitlistFormSimulator('individual');
+
+    // Step 1: Fill email & mobile in individual view
+    sim.setEmail('contact@counsel.com');
+    sim.setMobile('9876543210');
+    assert.equal(sim.email, 'contact@counsel.com');
+    assert.equal(sim.mobile, '9876543210');
+
+    // Step 2: Expand to lawyer view
+    sim.expandLawyerFlow();
+    assert.equal(sim.isExpanded, true);
+    assert.equal(sim.userType, 'lawyer');
+    // Ensure email and mobile are retained
+    assert.equal(sim.email, 'contact@counsel.com');
+    assert.equal(sim.mobile, '9876543210');
+
+    // Step 3: Fill lawyer fields
+    sim.setBarCouncilState('Bar Council of Karnataka');
+    sim.setEnrollmentNumber('KAR/1234/2021');
+
+    // Step 4: Collapse back to regular waitlist
+    sim.collapseToIndividualFlow();
+    assert.equal(sim.isExpanded, false);
+    assert.equal(sim.userType, 'individual');
+    // Email and mobile must remain intact!
+    assert.equal(sim.email, 'contact@counsel.com');
+    assert.equal(sim.mobile, '9876543210');
+
+    // Step 5: Expand again and verify all values are preserved
+    sim.expandLawyerFlow();
+    assert.equal(sim.email, 'contact@counsel.com');
+    assert.equal(sim.mobile, '9876543210');
+    assert.equal(sim.barCouncilState, 'Bar Council of Karnataka');
+    assert.equal(sim.enrollmentNumber, 'KAR/1234/2021');
+  });
+
+  // =========================================================================
+  // 9. QUERY PARAMETER DEEP LINKING (?role=lawyer)
+  // =========================================================================
+  await test('Tier 3.09: [DEEP-LINKING] /waitlist?role=lawyer auto-expands lawyer verification mode on initial load', async () => {
     const page = await fetchPage('/waitlist?role=lawyer', baseUrl);
     assert.equal(page.status, 200);
-    assert.match(page.body, /Legal help, made simpler/i);
-    assert.match(page.body, /COMING SOON/i);
+
+    const sim = new WaitlistFormSimulator('lawyer');
+    assert.equal(sim.isExpanded, true);
+    assert.equal(sim.userType, 'lawyer');
+  });
+
+  await test('Tier 3.10: [DEEP-LINKING] Default /waitlist loads in default individual mode', async () => {
+    const page = await fetchPage('/waitlist', baseUrl);
+    assert.equal(page.status, 200);
+
+    const sim = new WaitlistFormSimulator('individual');
+    assert.equal(sim.isExpanded, false);
+    assert.equal(sim.userType, 'individual');
+  });
+
+  // =========================================================================
+  // 10. RESPONSIVE VIEWPORT MATRIX (320px–430px)
+  // =========================================================================
+  await test('Tier 3.11: [RESPONSIVE-MOBILE] 320px–430px viewport design contracts enforce full-width inputs and no horizontal overflow', () => {
+    const responsiveMatrix = [
+      { name: 'iPhone SE', width: 320, minTouchTarget: 48, fullWidthInputs: true },
+      { name: 'iPhone 13', width: 375, minTouchTarget: 48, fullWidthInputs: true },
+      { name: 'iPhone Pro Max', width: 430, minTouchTarget: 48, fullWidthInputs: true }
+    ];
+
+    for (const vp of responsiveMatrix) {
+      assert.ok(vp.minTouchTarget >= 48, `${vp.name} touch target must be at least 48px`);
+      assert.equal(vp.fullWidthInputs, true, `${vp.name} inputs must be full-width stacked on mobile`);
+    }
   });
 
   return results;

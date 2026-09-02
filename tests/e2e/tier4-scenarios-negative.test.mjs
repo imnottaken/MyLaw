@@ -59,14 +59,13 @@ export async function runTier4Tests(baseUrl) {
   });
 
   // =========================================================================
-  // SCENARIO 2: LAWYER ONBOARDING & WAITLIST CONVERSION JOURNEY
+  // SCENARIO 2: LAWYER ONBOARDING & VERIFICATION FLOW
   // =========================================================================
-  await test('Tier 4.02: [SCENARIO 2] Full Lawyer Journey: Landing -> Assistant -> Lawyer Q&A -> Inline CTA -> /waitlist -> Submit', async () => {
-    // Step 1: Lawyer opens Assistant
+  await test('Tier 4.02: [SCENARIO 2] Full Lawyer Journey: Landing -> Assistant / Direct Link -> /waitlist?role=lawyer -> Inline Form -> Submit', async () => {
+    // Step 1: Lawyer asks Assistant about joining
     const sim = new AssistantSimulator();
     sim.open();
 
-    // Step 2: Lawyer clicks "How can I join MyLaw as a practicing lawyer?"
     const qaLawyer = await sim.selectQuestion('lawyer-joining');
     assert.equal(qaLawyer.success, true);
     assert.match(qaLawyer.assistantMessage.text, /Practicing lawyers and chambers can apply/i);
@@ -74,21 +73,28 @@ export async function runTier4Tests(baseUrl) {
     assert.equal(qaLawyer.assistantMessage.cta.label, 'Join Lawyer Waitlist →');
     assert.equal(qaLawyer.assistantMessage.cta.href, '/waitlist?role=lawyer');
 
-    // Step 3: Lawyer clicks inline CTA and arrives at /waitlist?role=lawyer
+    // Step 2: Lawyer clicks CTA and reaches /waitlist?role=lawyer
     const ctaAction = sim.clickCta(qaLawyer.assistantMessage.cta);
     assert.equal(ctaAction.targetUrl, '/waitlist?role=lawyer');
 
     const waitlistPage = await fetchPage(ctaAction.targetUrl, baseUrl);
     assert.equal(waitlistPage.status, 200);
 
-    // Step 4: Lawyer completes waitlist form submission
+    // Step 3: Lawyer completes waitlist form with credentials
     const formSim = new WaitlistFormSimulator('lawyer');
-    formSim.setEmail('elena.counsel@lawpractice.co.uk');
+    formSim.setEmail('advocate.sharma@delhibar.org');
+    formSim.setMobile('+91 98100 12345');
+    formSim.setBarCouncilState('Bar Council of Delhi');
+    formSim.setEnrollmentNumber('D/4321/2018');
 
     const submitRes = await formSim.submit();
     assert.equal(submitRes.success, true);
-    assert.equal(submitRes.email, 'elena.counsel@lawpractice.co.uk');
-    assert.equal(submitRes.role, 'lawyer');
+    assert.equal(submitRes.email, 'advocate.sharma@delhibar.org');
+    assert.equal(submitRes.mobile, '9810012345');
+    assert.equal(submitRes.user_type, 'lawyer');
+    assert.equal(submitRes.bar_council_state, 'Bar Council of Delhi');
+    assert.equal(submitRes.enrollment_number, 'D/4321/2018');
+    assert.equal(submitRes.verification_status, 'pending');
     assert.equal(submitRes.submitted, true);
     assert.match(submitRes.successMessage, /You['’]re on the list/i);
   });
@@ -100,7 +106,6 @@ export async function runTier4Tests(baseUrl) {
     const sim = new AssistantSimulator();
     sim.open();
 
-    // User triggers legal advice query
     const disclaimerQa = await sim.selectQuestion('help-legal-advice-disclaimer');
     assert.equal(disclaimerQa.success, true);
     assert.equal(disclaimerQa.assistantMessage.isDisclaimer, true);
@@ -110,7 +115,6 @@ export async function runTier4Tests(baseUrl) {
       "MyLaw is designed to help people discover and connect with legal professionals. The MyLaw Assistant doesn't provide legal advice."
     );
 
-    // Verify user can seamlessly route to waitlist from disclaimer answer
     assert.ok(disclaimerQa.assistantMessage.cta);
     assert.equal(disclaimerQa.assistantMessage.cta.href, '/waitlist');
   });
@@ -123,12 +127,10 @@ export async function runTier4Tests(baseUrl) {
     assert.equal(sim.isOpen, false);
     assert.equal(sim.focusElement, 'trigger');
 
-    // Simulate Enter/Space on trigger button
     sim.open();
     assert.equal(sim.isOpen, true);
     assert.equal(sim.focusElement, 'panel-header');
 
-    // Simulate ESC key press to dismiss panel
     const escResult = sim.handleKeyDown('Escape');
     assert.equal(escResult.handled, true);
     assert.equal(escResult.action, 'closed');
@@ -146,7 +148,7 @@ export async function runTier4Tests(baseUrl) {
     const mobileHarness = {
       viewportWidth: 375,
       viewportHeight: 667,
-      triggerTouchSize: 52, // within 48-56px
+      triggerTouchSize: 52,
       hasOverflow: false
     };
 
@@ -155,9 +157,92 @@ export async function runTier4Tests(baseUrl) {
   });
 
   // =========================================================================
+  // SCENARIO 6: INDIVIDUAL USER ONBOARDING JOURNEY
+  // =========================================================================
+  await test('Tier 4.06: [SCENARIO 6] Full Individual Flow: Landing -> Hero CTA -> /waitlist -> Enter Email & Mobile -> Submit -> Confirmation', async () => {
+    // Step 1: User visits landing page
+    const landing = await fetchPage('/', baseUrl);
+    assert.equal(landing.status, 200);
+
+    // Step 2: User navigates to /waitlist
+    const waitlist = await fetchPage('/waitlist', baseUrl);
+    assert.equal(waitlist.status, 200);
+
+    // Step 3: User completes individual waitlist form
+    const formSim = new WaitlistFormSimulator('individual');
+    formSim.setEmail('ananya.seeker@gmail.com');
+    formSim.setMobile('9876543210');
+
+    const submitRes = await formSim.submit();
+    assert.equal(submitRes.success, true);
+    assert.equal(submitRes.user_type, 'individual');
+    assert.equal(submitRes.email, 'ananya.seeker@gmail.com');
+    assert.equal(submitRes.mobile, '9876543210');
+    assert.equal(submitRes.bar_council_state, null);
+    assert.equal(submitRes.enrollment_number, null);
+    assert.equal(submitRes.submitted, true);
+  });
+
+  // =========================================================================
+  // SCENARIO 7: DUPLICATE USER RE-REGISTRATION FLOW
+  // =========================================================================
+  await test('Tier 4.07: [SCENARIO 7] Duplicate User Re-Registration: Existing email submits -> Friendly confirmation displayed', async () => {
+    const formSim = new WaitlistFormSimulator('individual');
+    formSim.setEmail('existing.user@gmail.com');
+    formSim.setMobile('9876543210');
+
+    const mockDuplicateBackend = async (payload) => {
+      return {
+        success: true,
+        alreadyRegistered: true,
+        message: "You're already on the waitlist! We'll keep you updated."
+      };
+    };
+
+    const submitRes = await formSim.submit(mockDuplicateBackend);
+    assert.equal(submitRes.success, true);
+    assert.equal(submitRes.alreadyRegistered, true);
+    assert.match(submitRes.message, /already on the waitlist/i);
+  });
+
+  // =========================================================================
+  // SCENARIO 8: SERVER ERROR OUTAGE RECOVERY FLOW
+  // =========================================================================
+  await test('Tier 4.08: [SCENARIO 8] Server Outage Recovery: 500 error displays message and retains typed form data for retry', async () => {
+    const formSim = new WaitlistFormSimulator('lawyer');
+    formSim.setEmail('advocate.retry@example.com');
+    formSim.setMobile('9876543210');
+    formSim.setBarCouncilState('Bar Council of Maharashtra & Goa');
+    formSim.setEnrollmentNumber('MAH/999/2022');
+
+    // Simulate transient server 500 error
+    let attempts = 0;
+    const mockFlakyBackend = async (payload) => {
+      attempts++;
+      if (attempts === 1) {
+        return { success: false, error: 'Failed to join waitlist. Please try again.' };
+      }
+      return { success: true, data: { id: 'uuid-123', email: payload.email } };
+    };
+
+    // First attempt fails
+    const failRes = await formSim.submit(mockFlakyBackend);
+    assert.equal(failRes.success, false);
+    assert.equal(formSim.email, 'advocate.retry@example.com');
+    assert.equal(formSim.mobile, '9876543210');
+    assert.equal(formSim.barCouncilState, 'Bar Council of Maharashtra & Goa');
+    assert.equal(formSim.enrollmentNumber, 'MAH/999/2022');
+
+    // Second attempt succeeds
+    const retryRes = await formSim.submit(mockFlakyBackend);
+    assert.equal(retryRes.success, true);
+    assert.equal(formSim.submitted, true);
+  });
+
+  // =========================================================================
   // NEGATIVE ASSERTIONS & BRAND FIDELITY
   // =========================================================================
-  await test('Tier 4.06: [NEGATIVE] Complete absence of gavels, scales of justice, and courtroom tropes', () => {
+  await test('Tier 4.09: [NEGATIVE] Complete absence of gavels, scales of justice, and courtroom tropes', () => {
     const brandCheck = validateBrandProhibitions();
     const gavelViolations = brandCheck.violations.filter(v =>
       v.rule.includes('gavel') || v.rule.includes('scales') || v.rule.includes('courtroom')
@@ -169,7 +254,7 @@ export async function runTier4Tests(baseUrl) {
     );
   });
 
-  await test('Tier 4.07: [NEGATIVE] Complete absence of fake statistics and fabricated testimonials', () => {
+  await test('Tier 4.10: [NEGATIVE] Complete absence of fake statistics and fabricated testimonials', () => {
     const brandCheck = validateBrandProhibitions();
     const statViolations = brandCheck.violations.filter(v =>
       v.rule.includes('statistics') || v.rule.includes('testimonials')
@@ -181,7 +266,7 @@ export async function runTier4Tests(baseUrl) {
     );
   });
 
-  await test('Tier 4.08: [NEGATIVE] Complete absence of luxury black/gold and purple AI hype gradients', () => {
+  await test('Tier 4.11: [NEGATIVE] Complete absence of luxury black/gold and purple AI hype gradients', () => {
     const brandCheck = validateBrandProhibitions();
     const styleViolations = brandCheck.violations.filter(v =>
       v.rule.includes('luxury') || v.rule.includes('purple') || v.rule.includes('buzzword')
@@ -193,7 +278,7 @@ export async function runTier4Tests(baseUrl) {
     );
   });
 
-  await test('Tier 4.09: [NEGATIVE] Complete absence of dynamic AI endpoints or API keys', () => {
+  await test('Tier 4.12: [NEGATIVE] Complete absence of dynamic AI endpoints or API keys', () => {
     const aiCheck = validateZeroAiCalls();
     assert.equal(
       aiCheck.clean,

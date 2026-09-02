@@ -4,76 +4,114 @@ import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckCircleIcon, ArrowRightIcon } from "@/components/icons";
+import { INDIAN_STATE_BAR_COUNCILS } from "@/lib/constants";
 
-type RoleOption = "help" | "lawyer" | null;
+export type UserType = "individual" | "lawyer";
 
-function parseRoleParam(roleParam: string | null): RoleOption {
-  if (!roleParam) return null;
+export function parseRoleParam(roleParam: string | null): UserType {
+  if (!roleParam) return "individual";
   const normalized = roleParam.toLowerCase().trim();
-  if (normalized === "lawyer" || normalized === "attorney" || normalized === "professional") {
+  if (
+    normalized === "lawyer" ||
+    normalized === "attorney" ||
+    normalized === "professional"
+  ) {
     return "lawyer";
   }
-  if (
-    normalized === "help" ||
-    normalized === "individual" ||
-    normalized === "client" ||
-    normalized === "seeker"
-  ) {
-    return "help";
-  }
-  return null;
-}
-
-/* ── Inline Icons ── */
-function UserIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM3.5 17.5c0-3.59 2.91-6.5 6.5-6.5s6.5 2.91 6.5 6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function BriefcaseIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="6" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-      <path d="M7 6V4.5A1.5 1.5 0 0 1 8.5 3h3A1.5 1.5 0 0 1 13 4.5V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M2 11h16" stroke="currentColor" strokeWidth="1.5"/>
-    </svg>
-  );
+  return "individual";
 }
 
 function WaitlistFormContent() {
   const searchParams = useSearchParams();
-  const initialRole = parseRoleParam(searchParams.get("role"));
+  const roleParam = searchParams.get("role");
+  const initialUserType = parseRoleParam(roleParam);
 
+  const [userType, setUserType] = useState<UserType>(initialUserType);
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<RoleOption>(initialRole);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [mobile, setMobile] = useState("");
+  const [barCouncilState, setBarCouncilState] = useState("");
+  const [enrollmentNumber, setEnrollmentNumber] = useState("");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successSubtitle, setSuccessSubtitle] = useState("Thanks for joining MyLaw. We'll let you know when we're ready.");
+  const [successSubtitle, setSuccessSubtitle] = useState(
+    "Thanks for joining MyLaw. We'll let you know when we're ready."
+  );
   const [fadeState, setFadeState] = useState<"visible" | "fading-out" | "fading-in">("visible");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const sanitizedEmail = email.trim();
-    if (!sanitizedEmail) return;
+    if (!sanitizedEmail) {
+      setErrorMessage("Please provide a valid email address.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(sanitizedEmail)) {
+      setErrorMessage("Please enter a valid email address format.");
+      return;
+    }
+
+    const sanitizedMobile = mobile.trim();
+    if (!sanitizedMobile) {
+      setErrorMessage("Please provide your mobile number.");
+      return;
+    }
+
+    const digitsOnly = sanitizedMobile.replace(/[\s\-()]/g, "");
+    let coreDigits = digitsOnly;
+    if (coreDigits.startsWith("+91")) {
+      coreDigits = coreDigits.slice(3);
+    } else if (coreDigits.startsWith("91") && coreDigits.length === 12) {
+      coreDigits = coreDigits.slice(2);
+    } else if (coreDigits.startsWith("0") && coreDigits.length === 11) {
+      coreDigits = coreDigits.slice(1);
+    }
+
+    if (!/^\d{10}$/.test(coreDigits)) {
+      setErrorMessage("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
+    if (userType === "lawyer") {
+      if (!barCouncilState.trim()) {
+        setErrorMessage("Please select your State Bar Council.");
+        return;
+      }
+      if (!enrollmentNumber.trim()) {
+        setErrorMessage("Please provide your Bar Council Enrollment Number.");
+        return;
+      }
+    }
 
     setIsSubmitting(true);
     setErrorMessage(null);
 
     try {
+      const payload = {
+        email: sanitizedEmail,
+        mobile: sanitizedMobile,
+        user_type: userType,
+        role: userType === "lawyer" ? "lawyer" : "individual",
+        bar_council_state: userType === "lawyer" ? barCouncilState.trim() : null,
+        enrollment_number: userType === "lawyer" ? enrollmentNumber.trim().toUpperCase() : null,
+        source: "waitlist_page",
+      };
+
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: sanitizedEmail, role, source: "waitlist_page" }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        setErrorMessage(data.error || "Failed to join waitlist. Please check your email and try again.");
+        setErrorMessage(
+          data.error || "Failed to join waitlist. Please check your details and try again."
+        );
         setIsSubmitting(false);
         return;
       }
@@ -133,57 +171,11 @@ function WaitlistFormContent() {
         fadeState === "fading-out" ? "opacity-0" : "opacity-100"
       }`}
     >
-      <form onSubmit={handleSubmit} className="w-full space-y-4">
-        {/* Role Selector — Polished Icon Blocks */}
-        <div className="space-y-2">
-          <span className="block text-[11px] font-medium text-[#667085] uppercase tracking-wider">I am a:</span>
-          <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
-            <button
-              type="button"
-              onClick={() => setRole(role === "help" ? null : "help")}
-              className={`flex items-start gap-2 sm:gap-2.5 p-2.5 sm:p-3 rounded-[8px] border text-left cursor-pointer transition-all duration-150 select-none ${
-                role === "help"
-                  ? "border-[#285A8E] bg-[#285A8E]/[0.05] text-[#172033]"
-                  : "border-[#E6E8EC] bg-white text-[#172033] hover:bg-[#F7F8FA] hover:border-[#E6E8EC]/80"
-              }`}
-            >
-              <UserIcon className={`w-4 h-4 sm:w-[18px] sm:h-[18px] mt-0.5 shrink-0 ${role === "help" ? "text-[#285A8E]" : "text-[#667085]"}`} />
-              <div className="min-w-0">
-                <div className={`text-xs sm:text-[13px] font-semibold leading-tight truncate ${role === "help" ? "text-[#172033]" : "text-[#172033]"}`}>
-                  Individual
-                </div>
-                <div className="text-[10px] sm:text-[11px] text-[#667085] leading-snug mt-0.5 truncate sm:whitespace-normal">
-                  Seeking help
-                </div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setRole(role === "lawyer" ? null : "lawyer")}
-              className={`flex items-start gap-2 sm:gap-2.5 p-2.5 sm:p-3 rounded-[8px] border text-left cursor-pointer transition-all duration-150 select-none ${
-                role === "lawyer"
-                  ? "border-[#285A8E] bg-[#285A8E]/[0.05] text-[#172033]"
-                  : "border-[#E6E8EC] bg-white text-[#172033] hover:bg-[#F7F8FA] hover:border-[#E6E8EC]/80"
-              }`}
-            >
-              <BriefcaseIcon className={`w-4 h-4 sm:w-[18px] sm:h-[18px] mt-0.5 shrink-0 ${role === "lawyer" ? "text-[#285A8E]" : "text-[#667085]"}`} />
-              <div className="min-w-0">
-                <div className={`text-xs sm:text-[13px] font-semibold leading-tight truncate ${role === "lawyer" ? "text-[#172033]" : "text-[#172033]"}`}>
-                  Lawyer
-                </div>
-                <div className="text-[10px] sm:text-[11px] text-[#667085] leading-snug mt-0.5 truncate sm:whitespace-normal">
-                  Professional
-                </div>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Email + CTA — Responsive Form Row */}
-        <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-2">
-          <label htmlFor="waitlist-email" className="sr-only">
-            Email address
+      <form onSubmit={handleSubmit} className="w-full space-y-3.5" noValidate>
+        {/* Email Field */}
+        <div className="space-y-1.5 text-left">
+          <label htmlFor="waitlist-email" className="block text-xs font-medium text-[#172033]">
+            Email address <span className="text-red-500">*</span>
           </label>
           <input
             id="waitlist-email"
@@ -191,30 +183,142 @@ function WaitlistFormContent() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email address"
-            className="w-full sm:flex-1 h-[48px] sm:h-[50px] px-3.5 sm:px-4 bg-white border border-[#E6E8EC] rounded-[8px] text-sm text-[#172033] placeholder:text-[#667085]/50 focus:outline-none focus:ring-2 focus:ring-[#285A8E]/15 focus:border-[#285A8E] transition-all duration-150"
+            placeholder="name@example.com"
+            className="w-full h-[48px] sm:h-[50px] px-3.5 sm:px-4 bg-white border border-[#E6E8EC] rounded-[8px] text-sm text-[#172033] placeholder:text-[#667085]/50 focus:outline-none focus:ring-2 focus:ring-[#285A8E]/15 focus:border-[#285A8E] transition-all duration-200"
           />
+        </div>
+
+        {/* Mobile Number Field */}
+        <div className="space-y-1.5 text-left">
+          <label htmlFor="waitlist-mobile" className="block text-xs font-medium text-[#172033]">
+            Mobile number <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="waitlist-mobile"
+            type="tel"
+            required
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            placeholder="Mobile number e.g. +91 98765 43210"
+            className="w-full h-[48px] sm:h-[50px] px-3.5 sm:px-4 bg-white border border-[#E6E8EC] rounded-[8px] text-sm text-[#172033] placeholder:text-[#667085]/50 focus:outline-none focus:ring-2 focus:ring-[#285A8E]/15 focus:border-[#285A8E] transition-all duration-200"
+          />
+        </div>
+
+        {/* Smooth Expandable Lawyer Verification Section */}
+        <div
+          className={`overflow-hidden transition-all duration-200 ease-in-out ${
+            userType === "lawyer"
+              ? "max-h-[320px] opacity-100 space-y-3.5 pt-0.5"
+              : "max-h-0 opacity-0 pointer-events-none"
+          }`}
+          aria-hidden={userType !== "lawyer"}
+        >
+          {/* State Bar Council Dropdown */}
+          <div className="space-y-1.5 text-left">
+            <label htmlFor="waitlist-bar-council" className="block text-xs font-medium text-[#172033]">
+              State Bar Council <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <select
+                id="waitlist-bar-council"
+                required={userType === "lawyer"}
+                value={barCouncilState}
+                onChange={(e) => setBarCouncilState(e.target.value)}
+                className="w-full h-[48px] sm:h-[50px] px-3.5 sm:px-4 bg-white border border-[#E6E8EC] rounded-[8px] text-sm text-[#172033] focus:outline-none focus:ring-2 focus:ring-[#285A8E]/15 focus:border-[#285A8E] transition-all duration-200 appearance-none cursor-pointer pr-10"
+              >
+                <option value="" disabled className="text-[#667085]">
+                  Select State Bar Council
+                </option>
+                {INDIAN_STATE_BAR_COUNCILS.map((council) => (
+                  <option key={council} value={council} className="text-[#172033]">
+                    {council}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-[#667085]">
+                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                  <path d="M6 8l4 4 4-4" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Bar Council Enrollment Number */}
+          <div className="space-y-1.5 text-left">
+            <label htmlFor="waitlist-enrollment-number" className="block text-xs font-medium text-[#172033]">
+              Bar Council Enrollment Number <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="waitlist-enrollment-number"
+              type="text"
+              required={userType === "lawyer"}
+              value={enrollmentNumber}
+              onChange={(e) => setEnrollmentNumber(e.target.value)}
+              placeholder="e.g. D/1234/2020"
+              className="w-full h-[48px] sm:h-[50px] px-3.5 sm:px-4 bg-white border border-[#E6E8EC] rounded-[8px] text-sm text-[#172033] placeholder:text-[#667085]/50 focus:outline-none focus:ring-2 focus:ring-[#285A8E]/15 focus:border-[#285A8E] transition-all duration-200"
+            />
+          </div>
+        </div>
+
+        {/* Error Message Alert */}
+        {errorMessage && (
+          <div
+            role="alert"
+            className="p-2.5 rounded-[6px] bg-red-50 border border-red-200 text-xs text-red-700 text-center font-medium animate-in fade-in duration-200"
+          >
+            {errorMessage}
+          </div>
+        )}
+
+        {/* Submit CTA Button (Full Width, Stacking on Mobile & Desktop) */}
+        <div className="pt-1">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full sm:w-auto h-[48px] sm:h-[50px] px-5 inline-flex items-center justify-center gap-2 whitespace-nowrap bg-[#285A8E] hover:bg-[#1e4670] text-white text-sm font-semibold rounded-[8px] active:scale-[0.98] transition-all duration-150 shadow-sm group disabled:opacity-60 cursor-pointer"
+            className="w-full h-[48px] sm:h-[50px] px-5 inline-flex items-center justify-center gap-2 whitespace-nowrap bg-[#285A8E] hover:bg-[#1e4670] text-white text-sm font-semibold rounded-[8px] active:scale-[0.98] transition-all duration-200 shadow-sm group disabled:opacity-60 cursor-pointer"
           >
-            <span>{isSubmitting ? "Joining..." : "Join the Waitlist"}</span>
+            <span>
+              {isSubmitting
+                ? "Joining..."
+                : userType === "lawyer"
+                ? "Join as a Lawyer"
+                : "Join the Waitlist"}
+            </span>
             {!isSubmitting && (
               <ArrowRightIcon className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
             )}
           </button>
         </div>
 
-        {/* Error Message */}
-        {errorMessage && (
-          <div className="p-2.5 rounded-[6px] bg-red-50 border border-red-200 text-xs text-red-700 text-center font-medium animate-in fade-in">
-            {errorMessage}
-          </div>
-        )}
+        {/* Secondary Navigation Flow Toggle */}
+        <div className="text-center pt-1.5 pb-0.5">
+          {userType === "individual" ? (
+            <button
+              type="button"
+              onClick={() => {
+                setUserType("lawyer");
+                setErrorMessage(null);
+              }}
+              className="inline-flex items-center gap-1 text-xs text-[#285A8E] hover:text-[#1e4670] underline-offset-4 hover:underline transition-colors duration-150 cursor-pointer font-medium"
+            >
+              <span>Are you a lawyer? →</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setUserType("individual");
+                setErrorMessage(null);
+              }}
+              className="inline-flex items-center gap-1 text-xs text-[#667085] hover:text-[#172033] underline-offset-4 hover:underline transition-colors duration-150 cursor-pointer font-medium"
+            >
+              <span>← Back to regular waitlist</span>
+            </button>
+          )}
+        </div>
 
-        {/* Microcopy */}
-        <p className="text-[11px] text-[#667085]/70 pt-0.5">
+        {/* Editorial Trust Microcopy */}
+        <p className="text-[11px] text-[#667085]/70 text-center pt-0.5">
           Private by design. No spam. Just launch updates.
         </p>
       </form>
@@ -224,16 +328,16 @@ function WaitlistFormContent() {
 
 function WaitlistFormFallback() {
   return (
-    <div className="w-full space-y-4 animate-pulse">
-      <div className="h-5 bg-[#F7F8FA] rounded w-12" />
-      <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
-        <div className="h-14 sm:h-16 bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
-        <div className="h-14 sm:h-16 bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
+    <div className="w-full space-y-3.5 animate-pulse">
+      <div className="space-y-1.5">
+        <div className="h-3 bg-[#F7F8FA] rounded w-20" />
+        <div className="w-full h-[48px] sm:h-[50px] bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
       </div>
-      <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-2">
-        <div className="w-full sm:flex-1 h-[48px] sm:h-[50px] bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
-        <div className="w-full sm:w-36 h-[48px] sm:h-[50px] bg-[#285A8E]/20 rounded-[8px]" />
+      <div className="space-y-1.5">
+        <div className="h-3 bg-[#F7F8FA] rounded w-24" />
+        <div className="w-full h-[48px] sm:h-[50px] bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
       </div>
+      <div className="w-full h-[48px] sm:h-[50px] bg-[#285A8E]/20 rounded-[8px]" />
     </div>
   );
 }

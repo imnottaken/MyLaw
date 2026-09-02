@@ -117,3 +117,63 @@ A final agent resolves any inconsistencies identified by the independent reviewe
 2. **Render check**: Start `npm run dev`, confirm `http://localhost:3000` and `http://localhost:3000/waitlist` load without errors.
 3. **Independent design review** (R5): Independent agent checks every acceptance criterion above against the live pages, using a written rubric. Must flag any criterion not met.
 4. **Polish pass** (R6): Resolve all flags from R5.
+
+## 2026-09-02T17:50:12Z
+
+Update the existing MyLaw waitlist page form UX to replace the two-card role selector with a streamlined default flow for individuals and a smooth inline expandable verification flow for lawyers.
+
+Working directory: /Users/koustavdey/mylaw
+Integrity mode: development
+
+## Requirements
+
+### R1. Default Waitlist Form (Individual Flow)
+- Render by default with header:
+  - "Join the MyLaw waitlist"
+  - "Be the first to know when MyLaw launches."
+- Inputs:
+  - Email address (type="email", required)
+  - Mobile number (type="tel", required)
+- Submit button: [ Join the Waitlist → ]
+- Understated secondary link below form: "Are you a lawyer? →" (subtle text link, not a primary button/card).
+- Submitting saves record with user_type: "individual", leaving lawyer fields null.
+
+### R2. Smooth Inline Lawyer Flow
+- Clicking "Are you a lawyer? →" smoothly expands/reveals additional lawyer fields inline on the same page without navigation.
+- Lawyer Form Inputs:
+  - Email address (required)
+  - Mobile number (required)
+  - State Bar Council dropdown (required for lawyers, listing all Indian State Bar Councils e.g. Bar Council of Delhi, Bar Council of Maharashtra & Goa, Bar Council of Karnataka, Bar Council of Tamil Nadu & Puducherry, Bar Council of West Bengal, Bar Council of Uttar Pradesh, Bar Council of Punjab & Haryana, Bar Council of Gujarat, Bar Council of Rajasthan, Bar Council of Kerala, Bar Council of Andhra Pradesh, Bar Council of Telangana, Bar Council of Bihar, Bar Council of Madhya Pradesh, Bar Council of Odisha, Bar Council of Assam Nagaland Mizoram Arunachal Pradesh & Sikkim, Bar Council of Jharkhand, Bar Council of Chhattisgarh, Bar Council of Himachal Pradesh, Bar Council of Uttarakhand, Bar Council of Jammu & Kashmir, Bar Council of Tripura, Bar Council of Meghalaya, Bar Council of Manipur)
+  - Bar Council Enrollment Number text field (required for lawyers, e.g. placeholder "e.g. D/1234/2020")
+- Submit button: [ Join as a Lawyer → ]
+- Secondary back link: "← Back to regular waitlist" smoothly collapsing back to the default individual flow.
+- Submitting saves record with user_type: "lawyer", bar_council_state, enrollment_number, and verification_status: "pending".
+
+### R3. Data Layer & Supabase Schema Migration
+- Update waitlist table in Supabase safely with non-breaking nullable columns if not already present:
+  - user_type (TEXT check in ('individual', 'lawyer')) or map existing role
+  - mobile (TEXT)
+  - bar_council_state (TEXT)
+  - enrollment_number (TEXT)
+  - verification_status (TEXT default 'pending')
+- Handle duplicate email submissions gracefully (code 23505) with friendly confirmation.
+- Update Google Sheets webhook payload and Resend email alerts with mobile and lawyer verification details.
+
+### R4. Visual & Responsive Polish
+- Preserve the existing premium dark navy aesthetic, glassmorphism, typography, and card styling.
+- Responsive for mobile (320px–430px) and desktop without button overflows or awkward line wrapping.
+
+## Acceptance Criteria
+
+### Form Behavior & UX
+- [ ] Individual form renders with Email + Mobile fields and "Are you a lawyer? →" link by default.
+- [ ] Clicking "Are you a lawyer? →" smoothly animates in State Bar Council and Enrollment Number inputs.
+- [ ] Clicking "← Back to regular waitlist" returns cleanly to the individual form without losing filled email/mobile.
+- [ ] Mobile number and Email are required with client & server validation on both flows.
+- [ ] Lawyer fields (State Bar Council + Enrollment Number) are mandatory ONLY when submitting as a lawyer.
+
+### Backend & Database
+- [ ] POST /api/waitlist accepts email, mobile, user_type, bar_council_state, enrollment_number.
+- [ ] Supabase waitlist table persists the new columns without breaking existing data.
+- [ ] Resend email alerts and Google Sheets sync reflect the user type, mobile number, and bar details.
+- [ ] npm run build succeeds with 0 TypeScript or lint errors.

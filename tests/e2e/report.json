@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-01T13:50:50.853Z",
+  "timestamp": "2026-09-02T18:13:15.866Z",
   "baseUrl": "http://localhost:3000",
   "tiers": {
     "tier1": [
@@ -56,7 +56,7 @@
       {
         "name": "Tier 1.11: [CHAT-GREETING] Random greeting selection produces valid non-empty greeting on open",
         "passed": true,
-        "durationMs": 1
+        "durationMs": 0
       },
       {
         "name": "Tier 1.12: [CHAT-INITIAL-Q] Exactly 5 initial question bubbles displayed on open",
@@ -71,7 +71,7 @@
       {
         "name": "Tier 1.14: [CHAT-QA-FLOW] Question click renders user message bubble -> transition -> assistant answer bubble",
         "passed": true,
-        "durationMs": 201
+        "durationMs": 202
       },
       {
         "name": "Tier 1.15: [CHAT-QA-FLOW] Message bubble visual alignment & color styling contracts",
@@ -81,17 +81,17 @@
       {
         "name": "Tier 1.16: [CHAT-FOLLOWUP] Active answer displays 2-3 contextual follow-up questions",
         "passed": true,
-        "durationMs": 201
+        "durationMs": 202
       },
       {
         "name": "Tier 1.17: [CHAT-FOLLOWUP] \"← Back to questions\" resets active selection and restores top 5 questions",
         "passed": true,
-        "durationMs": 201
+        "durationMs": 200
       },
       {
         "name": "Tier 1.18: [CHAT-GUARDRAILS] Strictly zero interactive free-text inputs in Assistant components",
         "passed": true,
-        "durationMs": 4
+        "durationMs": 7
       },
       {
         "name": "Tier 1.19: [CHAT-GUARDRAILS] Strictly zero dynamic AI/LLM SDK calls across codebase",
@@ -111,29 +111,69 @@
       {
         "name": "Tier 1.22: [CHAT-WAITLIST-CTA] Lawyer onboarding answer renders inline CTA routing to /waitlist?role=lawyer",
         "passed": true,
-        "durationMs": 201
+        "durationMs": 202
       },
       {
         "name": "Tier 1.23: [BASELINE] Landing page loads with HTTP 200 and all 7 editorial sections intact",
         "passed": true,
-        "durationMs": 87
+        "durationMs": 73
       },
       {
         "name": "Tier 1.24: [BASELINE] Landing page hero displays eyebrow, headline, copy, and dual CTAs",
         "passed": true,
-        "durationMs": 33
+        "durationMs": 30
       },
       {
-        "name": "Tier 1.25: [BASELINE] Waitlist page (/waitlist) loads with HTTP 200, COMING SOON, and Waitlist Form",
+        "name": "Tier 1.25: [BASELINE] Waitlist page (/waitlist) loads with HTTP 200 and COMING SOON headline",
         "passed": true,
-        "durationMs": 37
+        "durationMs": 25
+      },
+      {
+        "name": "Tier 1.26: [WAITLIST-DEFAULT-UI] Default individual form renders Email + Mobile inputs, CTA, and secondary lawyer link",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 1.27: [WAITLIST-EXPAND] Expanding lawyer flow reveals State Bar Council dropdown and Enrollment Number input",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 1.28: [WAITLIST-COLLAPSE] Collapsing lawyer flow cleanly restores default individual form",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 1.29: [WAITLIST-BAR-COUNCILS] Bar Council catalog contains exactly all 24 Indian State Bar Councils",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 1.30: [WAITLIST-SUBMIT-INDIVIDUAL] Successful Individual submission persists user_type=\"individual\", mobile, and null lawyer fields",
+        "passed": true,
+        "durationMs": 22
+      },
+      {
+        "name": "Tier 1.31: [WAITLIST-SUBMIT-LAWYER] Successful Lawyer submission persists user_type=\"lawyer\", bar credentials, and pending status",
+        "passed": true,
+        "durationMs": 21
+      },
+      {
+        "name": "Tier 1.32: [WAITLIST-API-SCHEMA] POST /api/waitlist payload contract supports individual and lawyer schemas",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 1.33: [WAITLIST-INTEGRATIONS-SCHEMA] Google Sheets & Resend schemas include mobile and lawyer details",
+        "passed": true,
+        "durationMs": 0
       }
     ],
     "tier2": [
       {
         "name": "Tier 2.01: Rapid toggle spamming (50 open/close cycles) preserves deterministic state",
         "passed": true,
-        "durationMs": 1
+        "durationMs": 0
       },
       {
         "name": "Tier 2.02: ESC key dismisses panel at initial greeting state and restores focus",
@@ -158,12 +198,12 @@
       {
         "name": "Tier 2.06: Selecting invalid or nonexistent question ID fails gracefully without exception",
         "passed": true,
-        "durationMs": 1
+        "durationMs": 0
       },
       {
         "name": "Tier 2.07: Light mode strictly enforced with zero dark: classes in UI components",
         "passed": true,
-        "durationMs": 4
+        "durationMs": 6
       },
       {
         "name": "Tier 2.08: Design tokens in globals.css match exact design spec values",
@@ -178,7 +218,7 @@
       {
         "name": "Tier 2.10: Guardrail verification: zero interactive text inputs and zero dynamic AI calls",
         "passed": true,
-        "durationMs": 3
+        "durationMs": 8
       },
       {
         "name": "Tier 2.11: Empty email input is rejected by waitlist validation",
@@ -191,31 +231,71 @@
         "durationMs": 0
       },
       {
-        "name": "Tier 2.13: Email with leading and trailing whitespace is trimmed and accepted",
+        "name": "Tier 2.13: Email with leading and trailing whitespace is trimmed and lowercased",
         "passed": true,
-        "durationMs": 52
+        "durationMs": 22
       },
       {
-        "name": "Tier 2.14: Submitting without selecting optional role succeeds with role as null",
+        "name": "Tier 2.14: Missing or empty mobile number is rejected by waitlist validation",
         "passed": true,
-        "durationMs": 51
+        "durationMs": 1
       },
       {
-        "name": "Tier 2.15: Rapid double submission is handled cleanly without duplicate execution",
+        "name": "Tier 2.15: Malformed mobile numbers (<10 digits, alphabets, special chars) are rejected",
         "passed": true,
-        "durationMs": 52
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.16: Valid Indian mobile number formats (+91, spaces, dashes, standard 10-digit) are normalized",
+        "passed": true,
+        "durationMs": 106
+      },
+      {
+        "name": "Tier 2.17: Missing State Bar Council in Lawyer flow is rejected with validation error",
+        "passed": true,
+        "durationMs": 1
+      },
+      {
+        "name": "Tier 2.18: Unknown or invalid State Bar Council string in Lawyer flow is rejected",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.19: Missing Enrollment Number in Lawyer flow is rejected with validation error",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 2.20: In Individual flow, lawyer fields are optional and safely default to null",
+        "passed": true,
+        "durationMs": 22
+      },
+      {
+        "name": "Tier 2.21: Postgres duplicate email (code 23505) returns graceful HTTP 200 with alreadyRegistered: true",
+        "passed": true,
+        "durationMs": 22
+      },
+      {
+        "name": "Tier 2.22: Extreme string lengths and enrollment whitespace are sanitized safely",
+        "passed": true,
+        "durationMs": 22
+      },
+      {
+        "name": "Tier 2.23: Rapid double submission is debounced and handled without duplicate execution",
+        "passed": true,
+        "durationMs": 21
       }
     ],
     "tier3": [
       {
         "name": "Tier 3.01: [CROSS-PAGE] Assistant conversational state operates seamlessly across / and /waitlist",
         "passed": true,
-        "durationMs": 98
+        "durationMs": 108
       },
       {
         "name": "Tier 3.02: [INLINE-CTA] Assistant answer CTA cleanly routes to /waitlist and /waitlist?role=lawyer",
         "passed": true,
-        "durationMs": 467
+        "durationMs": 492
       },
       {
         "name": "Tier 3.03: [Z-INDEX] Assistant overlay hierarchy ensures panel appears above Navbar without clipping",
@@ -235,34 +315,49 @@
       {
         "name": "Tier 3.06: [ANCHORS] Landing page section targets (#about, #how-it-works, #for-lawyers) are defined",
         "passed": true,
-        "durationMs": 33
+        "durationMs": 28
       },
       {
         "name": "Tier 3.07: [RETURN-NAV] Waitlist page header provides link returning to homepage (/)",
         "passed": true,
+        "durationMs": 21
+      },
+      {
+        "name": "Tier 3.08: [STATE-RETENTION] Expand -> Fill Lawyer fields -> Collapse -> Expand preserves all input values",
+        "passed": true,
+        "durationMs": 0
+      },
+      {
+        "name": "Tier 3.09: [DEEP-LINKING] /waitlist?role=lawyer auto-expands lawyer verification mode on initial load",
+        "passed": true,
+        "durationMs": 25
+      },
+      {
+        "name": "Tier 3.10: [DEEP-LINKING] Default /waitlist loads in default individual mode",
+        "passed": true,
         "durationMs": 18
       },
       {
-        "name": "Tier 3.08: [ROLE-QUERY] /waitlist?role=lawyer renders successfully without 500 or hydration errors",
+        "name": "Tier 3.11: [RESPONSIVE-MOBILE] 320px–430px viewport design contracts enforce full-width inputs and no horizontal overflow",
         "passed": true,
-        "durationMs": 18
+        "durationMs": 0
       }
     ],
     "tier4": [
       {
         "name": "Tier 4.01: [SCENARIO 1] Full Consumer Journey: Landing -> Trigger -> Greeting -> Q&A -> Follow-up -> Back -> Dismiss",
         "passed": true,
-        "durationMs": 431
+        "durationMs": 433
       },
       {
-        "name": "Tier 4.02: [SCENARIO 2] Full Lawyer Journey: Landing -> Assistant -> Lawyer Q&A -> Inline CTA -> /waitlist -> Submit",
+        "name": "Tier 4.02: [SCENARIO 2] Full Lawyer Journey: Landing -> Assistant / Direct Link -> /waitlist?role=lawyer -> Inline Form -> Submit",
         "passed": true,
-        "durationMs": 306
+        "durationMs": 272
       },
       {
         "name": "Tier 4.03: [SCENARIO 3] Legal Advice Guardrail: User asks for legal advice -> Strict statutory disclaimer delivered",
         "passed": true,
-        "durationMs": 201
+        "durationMs": 202
       },
       {
         "name": "Tier 4.04: [SCENARIO 4] Keyboard-Only Navigation: Enter to open -> Tab navigation -> ESC to dismiss & focus restore",
@@ -272,34 +367,49 @@
       {
         "name": "Tier 4.05: [SCENARIO 5] Mobile Touch & Fluid Viewport: Responsive touch target (48-56px) & zero page overflow",
         "passed": true,
-        "durationMs": 65
+        "durationMs": 66
       },
       {
-        "name": "Tier 4.06: [NEGATIVE] Complete absence of gavels, scales of justice, and courtroom tropes",
+        "name": "Tier 4.06: [SCENARIO 6] Full Individual Flow: Landing -> Hero CTA -> /waitlist -> Enter Email & Mobile -> Submit -> Confirmation",
+        "passed": true,
+        "durationMs": 66
+      },
+      {
+        "name": "Tier 4.07: [SCENARIO 7] Duplicate User Re-Registration: Existing email submits -> Friendly confirmation displayed",
+        "passed": true,
+        "durationMs": 20
+      },
+      {
+        "name": "Tier 4.08: [SCENARIO 8] Server Outage Recovery: 500 error displays message and retains typed form data for retry",
+        "passed": true,
+        "durationMs": 43
+      },
+      {
+        "name": "Tier 4.09: [NEGATIVE] Complete absence of gavels, scales of justice, and courtroom tropes",
         "passed": true,
         "durationMs": 3
       },
       {
-        "name": "Tier 4.07: [NEGATIVE] Complete absence of fake statistics and fabricated testimonials",
+        "name": "Tier 4.10: [NEGATIVE] Complete absence of fake statistics and fabricated testimonials",
         "passed": true,
-        "durationMs": 1
+        "durationMs": 3
       },
       {
-        "name": "Tier 4.08: [NEGATIVE] Complete absence of luxury black/gold and purple AI hype gradients",
+        "name": "Tier 4.11: [NEGATIVE] Complete absence of luxury black/gold and purple AI hype gradients",
         "passed": true,
         "durationMs": 2
       },
       {
-        "name": "Tier 4.09: [NEGATIVE] Complete absence of dynamic AI endpoints or API keys",
+        "name": "Tier 4.12: [NEGATIVE] Complete absence of dynamic AI endpoints or API keys",
         "passed": true,
         "durationMs": 2
       }
     ]
   },
   "summary": {
-    "total": 57,
-    "passed": 57,
+    "total": 79,
+    "passed": 79,
     "failed": 0,
-    "durationMs": 5961
+    "durationMs": 4134
   }
 }

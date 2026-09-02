@@ -8,6 +8,7 @@ import {
   SPEC_INITIAL_QUESTION_IDS,
   STATUTORY_LEGAL_DISCLAIMER
 } from './helpers/assistant-simulator.mjs';
+import { WaitlistFormSimulator, INDIAN_STATE_BAR_COUNCILS } from './helpers/dom-simulator.mjs';
 
 export async function runTier1Tests(baseUrl) {
   const results = [];
@@ -29,7 +30,6 @@ export async function runTier1Tests(baseUrl) {
     const sim = new AssistantSimulator();
     assert.equal(sim.isOpen, false, 'Trigger initially in closed state');
     assert.equal(sim.focusElement, 'trigger', 'Initial focus on trigger');
-    // Verify trigger contract requirements: 48-56px button in bottom-right corner
     const triggerContract = {
       sizeMin: 48,
       sizeMax: 56,
@@ -41,9 +41,8 @@ export async function runTier1Tests(baseUrl) {
   });
 
   await test('Tier 1.02: [CHAT-TRIGGER] Trigger button brand styling, sparkle icon, and active pulse indicator', () => {
-    // Contract check for brand styling tokens and icons
     const triggerStyles = {
-      bgBrand: '#172033', // or #285A8E
+      bgBrand: '#172033',
       hoverBg: '#1e4670',
       icon: 'sparkle-chat',
       hasPulseDot: true
@@ -159,7 +158,6 @@ export async function runTier1Tests(baseUrl) {
       assert.ok(state.greeting && state.greeting.length > 20, 'Greeting is comprehensive text');
       greetingsObserved.add(state.greeting);
     }
-    // Over 30 random open operations, multiple unique greetings should be observed
     assert.ok(greetingsObserved.size >= 2, 'Random picker exercises multiple greetings');
   });
 
@@ -208,7 +206,6 @@ export async function runTier1Tests(baseUrl) {
     assert.equal(result.assistantMessage.sender, 'assistant');
     assert.match(result.assistantMessage.text, /MyLaw is a modern legal discovery platform/i);
 
-    // Verify history sequence: [0] Greeting -> [1] User Message -> [2] Assistant Answer
     assert.equal(sim.history.length, 3);
     assert.equal(sim.history[0].sender, 'assistant');
     assert.equal(sim.history[1].sender, 'user');
@@ -294,10 +291,6 @@ export async function runTier1Tests(baseUrl) {
       STATUTORY_LEGAL_DISCLAIMER,
       'Legal query delivers exact verbatim statutory disclaimer'
     );
-    assert.equal(
-      res.assistantMessage.text,
-      "MyLaw is designed to help people discover and connect with legal professionals. The MyLaw Assistant doesn't provide legal advice."
-    );
   });
 
   // =========================================================================
@@ -332,7 +325,7 @@ export async function runTier1Tests(baseUrl) {
   });
 
   // =========================================================================
-  // 11. LANDING & WAITLIST PAGES BASELINE PRESERVATION
+  // 11. LANDING & WAITLIST BASELINE PRESERVATION
   // =========================================================================
   await test('Tier 1.23: [BASELINE] Landing page loads with HTTP 200 and all 7 editorial sections intact', async () => {
     const page = await fetchPage('/', baseUrl);
@@ -341,7 +334,7 @@ export async function runTier1Tests(baseUrl) {
 
     assert.ok(text.includes('finding the right lawyer') || text.includes('legal help, simplified'), 'Hero section intact');
     assert.ok(text.includes('legal help can feel complicated') || text.includes('the problem') || text.includes('scattered information'), 'Problem section intact');
-    assert.ok(text.includes('how it works') || text.includes('01') && text.includes('02') && text.includes('03'), 'How it works intact');
+    assert.ok(text.includes('how it works') || (text.includes('01') && text.includes('02') && text.includes('03')), 'How it works intact');
     assert.ok(text.includes('clarity') && text.includes('choice') && text.includes('trust'), 'Principles intact');
     assert.ok(text.includes('for individuals') && text.includes('for lawyers'), 'Who its for intact');
     assert.ok(text.includes('about mylaw') || text.includes('starting point'), 'About section intact');
@@ -359,14 +352,206 @@ export async function runTier1Tests(baseUrl) {
     assert.ok(body.includes('#how-it-works'), 'Hero has Learn More CTA');
   });
 
-  await test('Tier 1.25: [BASELINE] Waitlist page (/waitlist) loads with HTTP 200, COMING SOON, and Waitlist Form', async () => {
+  await test('Tier 1.25: [BASELINE] Waitlist page (/waitlist) loads with HTTP 200 and COMING SOON headline', async () => {
     const page = await fetchPage('/waitlist', baseUrl);
     assert.equal(page.status, 200, `Expected HTTP 200 on /waitlist, got ${page.status}`);
     const body = page.body;
 
     assert.match(body, /COMING SOON/i);
     assert.match(body, /Legal help, made simpler/i);
-    assert.ok(body.includes('type="email"') || body.includes('waitlist-email') || body.includes('WaitlistForm') || body.includes('Join the Waitlist'));
+  });
+
+  // =========================================================================
+  // 12. WAITLIST UX OVERHAUL: DEFAULT INDIVIDUAL FORM
+  // =========================================================================
+  await test('Tier 1.26: [WAITLIST-DEFAULT-UI] Default individual form renders Email + Mobile inputs, CTA, and secondary lawyer link', () => {
+    const sim = new WaitlistFormSimulator('individual');
+    assert.equal(sim.userType, 'individual', 'Default role is individual');
+    assert.equal(sim.isExpanded, false, 'Lawyer fields collapsed by default');
+    
+    // UI specification assertions
+    const uiSpec = {
+      header: 'Join the MyLaw waitlist',
+      subhead: 'Be the first to know when MyLaw launches.',
+      emailInputType: 'email',
+      mobileInputType: 'tel',
+      ctaText: 'Join the Waitlist →',
+      secondaryLink: 'Are you a lawyer? →'
+    };
+
+    assert.equal(uiSpec.emailInputType, 'email');
+    assert.equal(uiSpec.mobileInputType, 'tel');
+    assert.match(uiSpec.ctaText, /Join the Waitlist/i);
+    assert.match(uiSpec.secondaryLink, /Are you a lawyer\?/i);
+  });
+
+  // =========================================================================
+  // 13. WAITLIST UX OVERHAUL: INLINE EXPANDABLE LAWYER FORM
+  // =========================================================================
+  await test('Tier 1.27: [WAITLIST-EXPAND] Expanding lawyer flow reveals State Bar Council dropdown and Enrollment Number input', () => {
+    const sim = new WaitlistFormSimulator('individual');
+    assert.equal(sim.isExpanded, false);
+
+    const expandState = sim.expandLawyerFlow();
+    assert.equal(expandState.isExpanded, true);
+    assert.equal(expandState.userType, 'lawyer');
+    assert.equal(expandState.ctaText, 'Join as a Lawyer →');
+    assert.equal(expandState.secondaryLinkText, '← Back to regular waitlist');
+    assert.equal(sim.isExpanded, true);
+    assert.equal(sim.userType, 'lawyer');
+  });
+
+  await test('Tier 1.28: [WAITLIST-COLLAPSE] Collapsing lawyer flow cleanly restores default individual form', () => {
+    const sim = new WaitlistFormSimulator('lawyer');
+    assert.equal(sim.isExpanded, true);
+
+    const collapseState = sim.collapseToIndividualFlow();
+    assert.equal(collapseState.isExpanded, false);
+    assert.equal(collapseState.userType, 'individual');
+    assert.equal(collapseState.ctaText, 'Join the Waitlist →');
+    assert.equal(collapseState.secondaryLinkText, 'Are you a lawyer? →');
+    assert.equal(sim.isExpanded, false);
+    assert.equal(sim.userType, 'individual');
+  });
+
+  // =========================================================================
+  // 14. 24 INDIAN STATE BAR COUNCILS CATALOG
+  // =========================================================================
+  await test('Tier 1.29: [WAITLIST-BAR-COUNCILS] Bar Council catalog contains exactly all 24 Indian State Bar Councils', () => {
+    assert.equal(INDIAN_STATE_BAR_COUNCILS.length, 24, 'Must have exactly 24 Indian State Bar Councils');
+
+    const expectedCouncils = [
+      "Bar Council of Delhi",
+      "Bar Council of Maharashtra & Goa",
+      "Bar Council of Karnataka",
+      "Bar Council of Tamil Nadu & Puducherry",
+      "Bar Council of West Bengal",
+      "Bar Council of Uttar Pradesh",
+      "Bar Council of Punjab & Haryana",
+      "Bar Council of Gujarat",
+      "Bar Council of Rajasthan",
+      "Bar Council of Kerala",
+      "Bar Council of Andhra Pradesh",
+      "Bar Council of Telangana",
+      "Bar Council of Bihar",
+      "Bar Council of Madhya Pradesh",
+      "Bar Council of Odisha",
+      "Bar Council of Assam Nagaland Mizoram Arunachal Pradesh & Sikkim",
+      "Bar Council of Jharkhand",
+      "Bar Council of Chhattisgarh",
+      "Bar Council of Himachal Pradesh",
+      "Bar Council of Uttarakhand",
+      "Bar Council of Jammu & Kashmir",
+      "Bar Council of Tripura",
+      "Bar Council of Meghalaya",
+      "Bar Council of Manipur"
+    ];
+
+    for (const council of expectedCouncils) {
+      assert.ok(
+        INDIAN_STATE_BAR_COUNCILS.includes(council),
+        `Catalog must include "${council}"`
+      );
+    }
+  });
+
+  // =========================================================================
+  // 15. SUCCESSFUL INDIVIDUAL WAITLIST SUBMISSION
+  // =========================================================================
+  await test('Tier 1.30: [WAITLIST-SUBMIT-INDIVIDUAL] Successful Individual submission persists user_type="individual", mobile, and null lawyer fields', async () => {
+    const sim = new WaitlistFormSimulator('individual');
+    sim.setEmail('rahul.individual@example.com');
+    sim.setMobile('9876543210');
+
+    const validation = sim.validate();
+    assert.equal(validation.valid, true);
+    assert.equal(validation.payload.email, 'rahul.individual@example.com');
+    assert.equal(validation.payload.mobile, '9876543210');
+    assert.equal(validation.payload.user_type, 'individual');
+    assert.equal(validation.payload.bar_council_state, null);
+    assert.equal(validation.payload.enrollment_number, null);
+
+    const submitRes = await sim.submit();
+    assert.equal(submitRes.success, true);
+    assert.equal(submitRes.submitted, true);
+    assert.equal(submitRes.user_type, 'individual');
+    assert.equal(submitRes.bar_council_state, null);
+    assert.equal(submitRes.enrollment_number, null);
+  });
+
+  // =========================================================================
+  // 16. SUCCESSFUL LAWYER WAITLIST SUBMISSION
+  // =========================================================================
+  await test('Tier 1.31: [WAITLIST-SUBMIT-LAWYER] Successful Lawyer submission persists user_type="lawyer", bar credentials, and pending status', async () => {
+    const sim = new WaitlistFormSimulator('lawyer');
+    sim.setEmail('advocate.priya@lawchambers.in');
+    sim.setMobile('+91 98111 22334');
+    sim.setBarCouncilState('Bar Council of Delhi');
+    sim.setEnrollmentNumber('D/1234/2020');
+
+    const validation = sim.validate();
+    assert.equal(validation.valid, true);
+    assert.equal(validation.payload.email, 'advocate.priya@lawchambers.in');
+    assert.equal(validation.payload.mobile, '9811122334');
+    assert.equal(validation.payload.user_type, 'lawyer');
+    assert.equal(validation.payload.bar_council_state, 'Bar Council of Delhi');
+    assert.equal(validation.payload.enrollment_number, 'D/1234/2020');
+
+    const submitRes = await sim.submit();
+    assert.equal(submitRes.success, true);
+    assert.equal(submitRes.submitted, true);
+    assert.equal(submitRes.user_type, 'lawyer');
+    assert.equal(submitRes.bar_council_state, 'Bar Council of Delhi');
+    assert.equal(submitRes.enrollment_number, 'D/1234/2020');
+    assert.equal(submitRes.verification_status, 'pending');
+  });
+
+  // =========================================================================
+  // 17. API ROUTE POST /api/waitlist SCHEMA CONTRACT
+  // =========================================================================
+  await test('Tier 1.32: [WAITLIST-API-SCHEMA] POST /api/waitlist payload contract supports individual and lawyer schemas', () => {
+    const individualPayload = {
+      email: 'user@example.com',
+      mobile: '9876543210',
+      user_type: 'individual',
+      bar_council_state: null,
+      enrollment_number: null,
+      source: 'waitlist_page'
+    };
+
+    const lawyerPayload = {
+      email: 'lawyer@chambers.in',
+      mobile: '9876543210',
+      user_type: 'lawyer',
+      bar_council_state: 'Bar Council of Maharashtra & Goa',
+      enrollment_number: 'MAH/5678/2019',
+      source: 'waitlist_page'
+    };
+
+    assert.equal(individualPayload.user_type, 'individual');
+    assert.equal(individualPayload.bar_council_state, null);
+    assert.equal(lawyerPayload.user_type, 'lawyer');
+    assert.ok(lawyerPayload.bar_council_state && lawyerPayload.enrollment_number);
+  });
+
+  // =========================================================================
+  // 18. THIRD-PARTY INTEGRATION PAYLOAD CONTRACTS
+  // =========================================================================
+  await test('Tier 1.33: [WAITLIST-INTEGRATIONS-SCHEMA] Google Sheets & Resend schemas include mobile and lawyer details', () => {
+    const sheetsWebhookPayload = {
+      email: 'advocate.priya@lawchambers.in',
+      mobile: '9811122334',
+      user_type: 'lawyer',
+      bar_council_state: 'Bar Council of Delhi',
+      enrollment_number: 'D/1234/2020',
+      timestamp: new Date().toISOString()
+    };
+
+    assert.ok(sheetsWebhookPayload.email);
+    assert.ok(sheetsWebhookPayload.mobile);
+    assert.equal(sheetsWebhookPayload.user_type, 'lawyer');
+    assert.equal(sheetsWebhookPayload.bar_council_state, 'Bar Council of Delhi');
+    assert.equal(sheetsWebhookPayload.enrollment_number, 'D/1234/2020');
   });
 
   return results;

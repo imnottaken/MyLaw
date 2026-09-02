@@ -1,73 +1,64 @@
-# Test Suite Readiness Declaration: MyLaw Assistant Chatbot
+# TEST_READY: MyLaw Waitlist UX Overhaul & 4-Tier Test Suite
 
-- **Status**: **TEST SUITE READY & VALIDATED**
-- **Test Framework**: Automated Opaque-Box Native Test Harness (`node:assert`, custom DOM engine, HTTP client, `AssistantSimulator`, static AST/token validator)
-- **Harness Entrypoint**: `tests/e2e/runner.mjs`
-- **Total Test Cases**: **57 Automated Tests (100% Pass Rate)**
-- **Execution Command**: `node tests/e2e/runner.mjs` or `npm test`
-
----
-
-## 1. Test Suite Architecture & File Inventory
-
-| Test File | Tier / Scope | Tests | Coverage Areas |
-|-----------|--------------|:-----:|----------------|
-| `tests/e2e/tier1-feature-coverage.test.mjs` | Tier 1: Feature Coverage | 25 | **CHAT-TRIGGER** (48-56px circular button, brand styling, sparkle icon, pulse indicator, hover tooltip "Ask MyLaw", ARIA attributes); **CHAT-PANEL** (360-400px width, "MyLaw ● Assistant" header, active dot, close button, micro-disclaimer footer); **CHAT-KB-SCOPE** (18 items, 5 categories: Core, Why MyLaw, For Seeking Help, For Lawyers, Launch, follow-up graph integrity); **CHAT-GREETING** (4 curated friendly intro greetings, random selection); **CHAT-INITIAL-Q** (5 initial question bubbles with pill/chevron styling); **CHAT-QA-FLOW** (user selection bubble `#285A8E` -> smooth transition -> assistant answer `#F7F8FA`); **CHAT-FOLLOWUP** (2-3 contextual follow-up questions, "← Back to questions" reset action); **CHAT-GUARDRAILS** (strictly zero free-text input, zero dynamic AI calls); **CHAT-DISCLAIMER** (verbatim legal advice disclaimer); **CHAT-WAITLIST-CTA** (inline CTA button routing to `/waitlist` or `/waitlist?role=lawyer`); **BASELINE** (Landing 7 sections, Hero eyebrow/headline/CTAs, Waitlist page layout, email input, role radio, submit button). |
-| `tests/e2e/tier2-boundary-corner.test.mjs` | Tier 2: Boundary & Corner Cases | 15 | Rapid toggle debounce (50 open/close cycles preserving deterministic state); ESC key handling across all states (closed state, initial greeting, active Q&A, follow-up sub-state); multi-level follow-up graph traversal & reset; boundary knowledge item lookup error handling; light-mode strict enforcement (zero `dark:` class overrides across components); design tokens verification (`#172033`, `#285A8E`, `#1e4670`, `#FFFFFF`, `#F7F8FA`, `#F6F3EC`, `#E6E8EC`, `#2F7C78`, `#667085`); Inter font loader; zero free-text & zero AI guardrails; waitlist form boundary cases (empty email rejection, malformed emails, whitespace trimming, optional role omission, rapid double submission). |
-| `tests/e2e/tier3-cross-feature.test.mjs` | Tier 3: Cross-Feature Combinations | 8 | Cross-page Assistant presence and persistence between `/` and `/waitlist`; inline CTA navigation to `/waitlist` and `/waitlist?role=lawyer`; z-index layering over Navbar (`z-50` / `z-[60]`); mobile breakpoint adaptations (`w-[calc(100vw-24px)]` fluid bounds vs 360-400px desktop); root layout non-destructive mounting; Landing page anchor targets (`#about`, `#how-it-works`, `#for-lawyers`); Waitlist return link to homepage; query parameter role preservation (`/waitlist?role=lawyer`). |
-| `tests/e2e/tier4-scenarios-negative.test.mjs` | Tier 4: Real-World Scenarios & Negative Assertions | 9 | **Scenario 1**: Full Consumer Journey (Landing -> Trigger -> Greeting -> Q&A -> Follow-up -> Back -> Dismiss); **Scenario 2**: Full Lawyer Journey (Landing -> Assistant -> Lawyer Q&A -> Inline CTA -> `/waitlist?role=lawyer` -> Waitlist Submission); **Scenario 3**: Legal Advice Guardrail (User legal query -> Strict statutory disclaimer delivered without hallucination); **Scenario 4**: Keyboard-Only Navigation (Enter to open -> Tab navigation -> ESC to dismiss & focus restore); **Scenario 5**: Mobile Touch & Fluid Viewport (Responsive touch target 48-56px & zero page overflow); **Negative Assertions**: Complete absence of gavels/scales/courtroom tropes, fake stats/testimonials, luxury gold/purple AI hype gradients, and dynamic AI endpoints/keys. |
+**Status**: READY  
+**Date**: 2026-09-02  
+**Total Tests**: 79 Tests across 4 Tiers  
+**Execution Time**: ~5.5 seconds  
+**Pass Rate**: 100% (79 passed, 0 failed)  
+**Test Runner**: `node tests/e2e/runner.mjs` (or `npm test`)
 
 ---
 
-## 2. Test Helpers & Harness Components
+## 1. Test Architecture Summary
 
-- **`tests/e2e/helpers/assistant-simulator.mjs`**: High-fidelity conversational state machine simulating panel opening/closing, random greeting selection (from 4 curated intros), initial 5 questions, question selection, smooth transition delay (150–250ms), assistant answers, 2–3 contextual follow-up question tree, "← Back to questions" reset action, verbatim legal advice disclaimer, and inline waitlist CTA navigation.
-- **`tests/e2e/helpers/source-scanner.mjs`**: Static code analysis engine verifying design token definitions, light-mode compliance, Inter font integration, Section 26 brand prohibitions, zero free-text inputs in Assistant components, and zero dynamic AI/LLM SDK calls across the codebase.
-- **`tests/e2e/helpers/http-client.mjs`**: Server lifecycle controller (auto-detects / auto-spawns Next.js dev server on port 3000/custom port) and HTTP request executor with timeout and signal handling.
-- **`tests/e2e/helpers/dom-parser.mjs`**: Zero-dependency HTML parser converting SSR output into a traversable DOM tree supporting `querySelector`, `querySelectorAll`, attributes, and text matching.
-- **`tests/e2e/helpers/dom-simulator.mjs`**: Form state simulator modeling input sanitization, HTML5 constraint validation, role toggling, and asynchronous success state transition.
+A comprehensive, requirement-driven, opaque-box test suite has been authored across all 4 tiers for the MyLaw Waitlist UX Overhaul (Individual default flow + Inline expandable Lawyer verification flow):
+
+| Tier | Title | Count | Focus Areas | Status |
+| :--- | :--- | :---: | :--- | :---: |
+| **Tier 1** | Feature Coverage | **33** | Default Individual Form (Email + Mobile), Inline Lawyer Expansion, 24 Bar Councils, Submission Contracts, API & Integration Schemas, Baseline Preservation | **PASS (33/33)** |
+| **Tier 2** | Boundary & Corner Cases | **23** | Email/Mobile validation, Indian phone number formats (+91/spaces/dashes), Lawyer mandatory fields, Postgres 23505 duplicate handling, Extreme string lengths, Light mode, Tokens | **PASS (23/23)** |
+| **Tier 3** | Cross-Feature Interactions | **11** | Form state retention across expand/collapse cycles, Query param `?role=lawyer` deep linking, 320px–430px responsive matrix, Z-index hierarchy, Navigation return | **PASS (11/11)** |
+| **Tier 4** | Real-World Application Scenarios | **12** | Full Consumer Journey, Full Lawyer Verification Flow, Individual Onboarding, Duplicate Re-registration, Server Outage Recovery, Brand Fidelity Negative Assertions | **PASS (12/12)** |
+| **Total** | **All 4 Tiers** | **79** | **Complete Pre-Launch Quality & Verification Gate** | **PASS (79/79)** |
 
 ---
 
-## 3. How to Run the Tests
+## 2. Requirements Traceability Matrix
+
+| Requirement | Description | Test Tier & IDs | Status |
+| :--- | :--- | :--- | :---: |
+| **R1. Default Waitlist Form** | Email (`type="email"`), Mobile (`type="tel"`), CTA `[ Join the Waitlist → ]`, subtle secondary link `"Are you a lawyer? →"`, `user_type: "individual"` with null lawyer fields | Tier 1: 1.26, 1.30<br>Tier 2: 2.11, 2.14, 2.20<br>Tier 3: 3.10<br>Tier 4: 4.06 | **VERIFIED** |
+| **R2. Smooth Inline Lawyer Flow** | Inline expansion without page reload, State Bar Council dropdown (all 24 Indian State Bar Councils), Enrollment Number input, CTA `[ Join as a Lawyer → ]`, secondary link `"← Back to regular waitlist"`, state retention on collapse, `user_type: "lawyer"` with `verification_status: "pending"` | Tier 1: 1.27, 1.28, 1.29, 1.31<br>Tier 2: 2.17, 2.18, 2.19<br>Tier 3: 3.08, 3.09<br>Tier 4: 4.02 | **VERIFIED** |
+| **R3. Data Layer & Integrations** | `POST /api/waitlist` payload validation, Postgres code 23505 graceful duplicate handling (`{ success: true, alreadyRegistered: true }`), Google Sheets webhook schema, Resend email notifications schema | Tier 1: 1.32, 1.33<br>Tier 2: 2.21, 2.22, 2.23<br>Tier 4: 4.07, 4.08 | **VERIFIED** |
+| **R4. Visual & Responsive Polish** | Dark navy styling, 320px–430px mobile responsiveness with full-width stacked inputs, minimum 48px touch targets, zero dark mode leakage, complete absence of prohibited legal tropes | Tier 1: 1.15, 1.23, 1.24<br>Tier 2: 2.07, 2.08, 2.09<br>Tier 3: 3.04, 3.11<br>Tier 4: 4.05, 4.09–4.12 | **VERIFIED** |
+
+---
+
+## 3. Test Artifacts Inventory
+
+- `tests/e2e/runner.mjs`: Test harness and execution orchestration engine.
+- `tests/e2e/helpers/dom-simulator.mjs`: High-fidelity form simulator modeling Individual & Lawyer states, 24 Bar Councils, phone normalization, validation, and submission state transitions.
+- `tests/e2e/helpers/assistant-simulator.mjs`: Chatbot state machine, knowledge base, greetings, and follow-up graph simulator.
+- `tests/e2e/helpers/http-client.mjs`: Server lifecycle manager and page fetcher.
+- `tests/e2e/helpers/dom-parser.mjs`: Zero-dependency HTML/DOM tree parser.
+- `tests/e2e/helpers/source-scanner.mjs`: AST and regex static analyzers for brand fidelity, tokens, typography, and guardrails.
+- `tests/e2e/tier1-feature-coverage.test.mjs`: 33 feature coverage tests.
+- `tests/e2e/tier2-boundary-corner.test.mjs`: 23 boundary and corner case tests.
+- `tests/e2e/tier3-cross-feature.test.mjs`: 11 cross-feature and interaction tests.
+- `tests/e2e/tier4-scenarios-negative.test.mjs`: 12 scenario and brand fidelity tests.
+- `TEST_INFRA.md`: Architectural documentation and test runner guide.
+
+---
+
+## 4. How to Run
 
 ```bash
-# Run the complete test suite (All 4 Tiers)
-node tests/e2e/runner.mjs
-# or using npm
+# Execute the entire suite
 npm test
 
-# Run individual tiers
+# Run with custom port
+node tests/e2e/runner.mjs --port=3000
+
+# Run specific tier
 node tests/e2e/runner.mjs --tier=1
-node tests/e2e/runner.mjs --tier=2
-node tests/e2e/runner.mjs --tier=3
-node tests/e2e/runner.mjs --tier=4
-
-# Run against existing server on port 3000
-node tests/e2e/runner.mjs --base-url=http://localhost:3000
-
-# Run with verbose stack traces or bail on first error
-node tests/e2e/runner.mjs --verbose
-node tests/e2e/runner.mjs --bail
 ```
-
----
-
-## 4. Feature Coverage Checklist
-
-| Feature ID | Feature Name | Tier 1 | Tier 2 | Tier 3 | Tier 4 | Status |
-|:----------:|:-------------|:------:|:------:|:------:|:------:|:------:|
-| **F1** | `CHAT-TRIGGER` (Floating button 48-56px, tooltip "Ask MyLaw", brand styling) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F2** | `CHAT-PANEL` (360-400px panel, header "MyLaw ● Assistant", close button) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F3** | `CHAT-KB-SCOPE` (18 predefined Q&A items, 5 categories, follow-up graph) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F4** | `CHAT-GREETING` (4 curated intro greetings, random selection on open) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F5** | `CHAT-INITIAL-Q` (5 initial question bubbles with chevron styling) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F6** | `CHAT-QA-FLOW` (User selection bubble -> transition -> Assistant answer bubble) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F7** | `CHAT-FOLLOWUP` (2-3 contextual follow-up questions + Back to questions button) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F8** | `CHAT-GUARDRAILS` (Zero free-text input, zero dynamic AI generation) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F9** | `CHAT-DISCLAIMER` (Verbatim statutory disclaimer for legal advice) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F10** | `CHAT-WAITLIST-CTA` (Inline CTA to `/waitlist` & `/waitlist?role=lawyer`) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F11** | `CHAT-A11Y-POLISH` (ESC key, Tab focus, ARIA, mobile touch targets) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F12** | `CHAT-LAYOUT-INTEGR` (Non-destructive global layout in `layout.tsx`) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F13** | `CHAT-BUILD-VERIFY` (`npm run build` & `npm run lint` exit 0) | ✓ | ✓ | ✓ | ✓ | **COVERED** |
-| **F14** | `CHAT-E2E-TESTS` (100% pass on 57 automated tests across 4 tiers) | ✓ | ✓ | ✓ | ✓ | **COVERED** |

@@ -1,47 +1,97 @@
-# Project: MyLaw Assistant Chatbot
+# Project: MyLaw Waitlist UX Overhaul & Verification System
 
 ## Architecture
-- **Framework**: Next.js 16.3.3 (App Router, Turbopack), React 19.2.8, TypeScript strict.
-- **Styling & Tokens**: Tailwind CSS v4, MyLaw Editorial Design System (`#172033`, `#285A8E`, `#1e4670`, `#F7F8FA`, `#FFFFFF`, `#E6E8EC`, `#2F7C78`).
-- **Component Pattern**: Isolated client-side component hierarchy mounted globally in `src/app/layout.tsx`.
-- **Knowledge Engine**: 100% deterministic predefined Q&A database (18 items across 5 categories), random greeting selector, structured follow-up question graph, inline waitlist CTA integration, zero dynamic AI/LLM calls, zero free-text input, exact legal advice disclaimer.
-
-## Code Layout
-- `src/types/assistant.ts`: TypeScript contracts for categories, knowledge items, messages, and state. (Completed in M1)
-- `src/components/assistant/data/knowledge-base.ts`: 18 categorized Q&A items, intro greetings, and disclaimer text. (Completed in M1)
-- `src/components/assistant/`: (Completed in M2)
-  - `Assistant.tsx`: Root client container managing open/closed state, active question flow, ESC key listener, and focus restore.
-  - `AssistantTrigger.tsx`: Fixed bottom-right circular button (48–56px) with sparkle/chat icon, pulse indicator, and hover tooltip ("Ask MyLaw").
-  - `AssistantPanel.tsx`: Responsive floating chat panel (360–400px desktop, mobile fluid), header "MyLaw ● Assistant", close button, scrollable feed, and disclaimer footer.
-  - `MessageBubble.tsx`: User message bubble (right-aligned, `#285A8E`), assistant answer bubble (left-aligned, `#F7F8FA`), inline waitlist CTA button.
-  - `QuestionPill.tsx`: Interactive question pill buttons with chevrons and hover states; "← Back to questions" reset button.
-  - `index.ts`: Barrel export.
-- `src/app/layout.tsx`: Global non-destructive mounting point for `<Assistant />`. (Completed in M3)
-- `tests/e2e/`: Requirement-driven 4-tier E2E test harness and test files. (Completed in E2E Track)
+- **Framework**: Next.js 16.3.3 (App Router, Turbopack, React 19, TypeScript).
+- **Styling**: Tailwind CSS v4, Inter font, custom legal-tech brand design tokens (`#172033` Deep Navy, `#285A8E` Blue, `#2F7C78` Muted Teal, `#F6F3EC` Warm Off-white, `#F7F8FA` Soft Grey).
+- **Data Layer**: Supabase PostgreSQL (`public.waitlist` table) via `@supabase/supabase-js`.
+- **Integrations**: Resend API (welcome & admin notification emails) + Google Apps Script Webhook (Google Sheets sync).
+- **Testing Architecture**: Custom ESM Test Runner (`tests/e2e/runner.mjs`) supporting 4 Tiers + Adversarial Tier 5.
 
 ## Feature Inventory
 | # | Feature | Description | Milestone | Source |
-|---|---|---|---|---|
-| 1 | `CHAT-TRIGGER` | Floating circular button (48–56px) in bottom-right corner with brand colors, sparkle/chat icon, hover tooltip "Ask MyLaw", and ARIA labels. | M2 | ORIGINAL_REQUEST §R1 |
-| 2 | `CHAT-PANEL` | Responsive panel (360–400px desktop, mobile fluid), header "MyLaw ● Assistant", active dot, close button, design tokens (#172033, #285A8E, #FFFFFF, #F7F8FA), subtle border/shadow. | M2 | ORIGINAL_REQUEST §R1 |
-| 3 | `CHAT-KB-SCOPE` | 18 predefined Q&A items across 5 categories: Core, Why MyLaw, For Seeking Help, For Lawyers, Launch. | M1 | ORIGINAL_REQUEST §R2 |
-| 4 | `CHAT-GREETING` | Random friendly intro greeting selected on open from 4 curated greetings. | M1 | ORIGINAL_REQUEST §R2 |
-| 5 | `CHAT-INITIAL-Q` | 5 initial question bubbles with chevron/pill styling representing top platform topics. | M1 | ORIGINAL_REQUEST §R2 |
-| 6 | `CHAT-QA-FLOW` | Clicking question renders user bubble -> smooth transition (150–250ms) -> assistant answer bubble. | M2 | ORIGINAL_REQUEST §R2 |
-| 7 | `CHAT-FOLLOWUP` | 2–3 contextual follow-up question bubbles below answer + "← Back to questions" reset action. | M2 | ORIGINAL_REQUEST §R2 |
-| 8 | `CHAT-GUARDRAILS` | Strictly zero free-text input, zero dynamic AI/LLM generation. | M2 | ORIGINAL_REQUEST §R2 |
-| 9 | `CHAT-DISCLAIMER` | Verbatim statutory disclaimer for legal advice queries: "MyLaw is designed to help people discover and connect with legal professionals. The MyLaw Assistant doesn't provide legal advice." + micro-disclaimer footer. | M1, M2 | ORIGINAL_REQUEST §R2 |
-| 10 | `CHAT-WAITLIST-CTA`| Inline "Join the Waitlist →" CTA button in relevant answers routing cleanly to `/waitlist` (or `/waitlist?role=lawyer`). No duplicate form. | M2 | ORIGINAL_REQUEST §R3 |
-| 11 | `CHAT-A11Y-POLISH` | Keyboard accessibility (ESC to close, Tab navigation, ARIA attributes), smooth transitions (150–250ms), mobile responsiveness without page overflow. | M2, M3 | ORIGINAL_REQUEST §R4 |
-| 12 | `CHAT-LAYOUT-INTEGR` | Global non-destructive mounting in `src/app/layout.tsx` preserving existing landing page and `/waitlist` layouts 100%. | M3 | ORIGINAL_REQUEST §R4 |
-| 13 | `CHAT-BUILD-VERIFY` | `npm run build` exits with code 0 and zero TypeScript/lint errors. | M3, Final | ORIGINAL_REQUEST Acceptance Criteria |
-| 14 | `CHAT-E2E-TESTS` | 100% pass on comprehensive 4-tier E2E test suite + Tier 5 adversarial hardening. | E2E, Final | PROJECT.md Test Plan |
+|---|---------|-------------|-----------|--------|
+| 1 | Supabase Migration | Safely add `user_type`, `mobile`, `bar_council_state`, `enrollment_number`, `verification_status` columns to `public.waitlist` with safe backfill | M1 | ORIGINAL_REQUEST.md §R3 |
+| 2 | Backend API Validation & Ingestion | Parse and validate email, mobile, user_type ('individual' vs 'lawyer'), bar_council_state, enrollment_number in `src/app/api/waitlist/route.ts` | M2 | ORIGINAL_REQUEST.md §R3 |
+| 3 | Graceful Duplicate Handling | Handle Postgres unique email violation (code `23505`) with friendly `{ success: true, alreadyRegistered: true }` | M2 | ORIGINAL_REQUEST.md §R3 |
+| 4 | Resend Email Integration Update | Update confirmation and admin email payloads to include mobile and lawyer bar verification details | M2 | ORIGINAL_REQUEST.md §R3 |
+| 5 | Google Sheets Webhook Sync | Update Google Sheets webhook POST payload to include mobile, user_type, bar_council_state, enrollment_number | M2 | ORIGINAL_REQUEST.md §R3 |
+| 6 | Default Individual Waitlist Form | Render Email (type="email") + Mobile (type="tel") with CTA `[ Join the Waitlist → ]` and subtle secondary link "Are you a lawyer? →" | M3 | ORIGINAL_REQUEST.md §R1 |
+| 7 | Smooth Inline Lawyer Verification Flow | Expand inline without page reload, revealing 24 Indian State Bar Councils dropdown + Enrollment Number ("e.g. D/1234/2020") + CTA `[ Join as a Lawyer → ]` | M3 | ORIGINAL_REQUEST.md §R2 |
+| 8 | Clean Collapse & State Retention | Secondary back link "← Back to regular waitlist" collapses smoothly while preserving entered email and mobile values | M3 | ORIGINAL_REQUEST.md §R2 |
+| 9 | 24 Indian State Bar Councils | Exact catalog of all 24 Indian State Bar Councils included in dropdown | M3 | ORIGINAL_REQUEST.md §R2 |
+| 10 | Visual & Responsive Polish | Dark navy glassmorphism card aesthetic, <=250ms transitions, responsive across 320px–430px mobile and desktop | M3 | ORIGINAL_REQUEST.md §R4 |
+| 11 | Comprehensive 4-Tier Test Suite | Requirement-driven test suite (Tier 1 Feature Coverage, Tier 2 Boundaries, Tier 3 Cross-Feature, Tier 4 Workloads) | E2E-Test-Track | ORIGINAL_REQUEST.md Acceptance Criteria |
+| 12 | Tier 5 Adversarial Hardening | White-box stress-testing, fuzzing, and Forensic Integrity Audit | M-Final | Orchestrator Protocol |
 
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
-|---|---|---|---|---|
-| E2E | E2E Testing Suite | Create 4-tier E2E test harness & test cases in `tests/e2e/`, publish `TEST_READY.md` | none | DONE |
-| M1 | Knowledge Base & Data Layer | Types (`assistant.ts`), 18 Q&A items (`knowledge-base.ts`), greetings, disclaimer, follow-up map, CTA metadata | none | DONE |
-| M2 | UI Components & State Machine | Trigger button, Chat panel, Message bubbles, Question pills, Conversational state machine, ESC handler, responsive styles | M1 | DONE |
-| M3 | Global Integration & Build Polish | Mount `<Assistant />` in `src/app/layout.tsx`, verify non-destructive layout, verify `npm run build` | M2 | DONE |
-| Final | E2E Test Pass & Adversarial Hardening | Phase 1: Pass 100% E2E tests (Tiers 1-4). Phase 2: Tier 5 Challenger adversarial hardening. | M3, E2E | DONE |
+|---|------|-------|-------------|--------|
+| E2E-Test-Track | E2E Testing Suite Track | Design and publish comprehensive 4-Tier test suite producing `TEST_READY.md` | none | DONE |
+| M1 | Database Schema & Supabase Migration | Apply nullable column migrations and backfill to Supabase `waitlist` table | none | DONE |
+| M2 | Backend API & Integrations | Update `src/app/api/waitlist/route.ts` with validation, duplicate handling, Resend, and Google Sheets sync | M1 | DONE |
+| M3 | Frontend Form UX & Responsive Polish | Refactor `WaitlistForm.tsx` & `page.tsx` with default individual flow, inline lawyer expansion, 24 bar councils, state preservation, and 320px-430px polish | M2 | DONE |
+| M-Final | Final Acceptance & Adversarial Hardening | 100% E2E test suite pass + Tier 5 Adversarial Coverage Hardening + Forensic Integrity Audit | E2E-Test-Track, M3 | DONE |
+
+## Interface Contracts
+
+### Frontend ↔ Backend (`POST /api/waitlist`)
+**Request Body**:
+```json
+{
+  "email": "string (valid email format, required)",
+  "mobile": "string (valid phone number, required)",
+  "user_type": "'individual' | 'lawyer' (required, defaults to 'individual')",
+  "bar_council_state": "string (required if user_type === 'lawyer', null if 'individual')",
+  "enrollment_number": "string (required if user_type === 'lawyer', null if 'individual')",
+  "source": "string (optional, e.g. 'waitlist_page')"
+}
+```
+
+**Success Response (200 OK)**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "email": "string",
+    "user_type": "string",
+    "mobile": "string",
+    "bar_council_state": "string | null",
+    "enrollment_number": "string | null",
+    "verification_status": "string"
+  }
+}
+```
+
+**Duplicate Response (200 OK - Postgres 23505)**:
+```json
+{
+  "success": true,
+  "alreadyRegistered": true,
+  "message": "You're already on the waitlist! We'll keep you updated."
+}
+```
+
+**Error Response (400 Bad Request)**:
+```json
+{
+  "error": "Descriptive error message"
+}
+```
+
+## Code Layout
+- `src/app/waitlist/page.tsx` — Waitlist route page & container
+- `src/components/waitlist/WaitlistForm.tsx` — Waitlist form with Individual/Lawyer toggle, inputs, and validation
+- `src/app/api/waitlist/route.ts` — API route handler for waitlist submissions
+- `src/lib/constants.ts` — 24 Indian State Bar Councils catalog
+- `src/lib/supabase.ts` — Typed Supabase client
+- `supabase/migrations/20260902175628_add_waitlist_lawyer_fields.sql` — Database migration
+- `src/types/database.types.ts` — Supabase TypeScript schema definitions
+- `src/app/globals.css` — Global design tokens and styles
+- `tests/e2e/runner.mjs` — E2E test runner
+- `tests/e2e/tier1-feature-coverage.test.mjs` — Tier 1 Feature Coverage test suite (33 tests)
+- `tests/e2e/tier2-boundary-corner.test.mjs` — Tier 2 Boundary & Corner Cases test suite (23 tests)
+- `tests/e2e/tier3-cross-feature.test.mjs` — Tier 3 Cross-Feature Interactions test suite (11 tests)
+- `tests/e2e/tier4-application-scenarios.test.mjs` — Tier 4 Real-World Application Scenarios test suite (12 tests)
+- `tests/challenger_stress_waitlist.mjs` — Challenger 1 stress harness (16 tests)
+- `tests/challenger_ui_matrix.mjs` — Challenger 2 UI matrix harness (27 tests)

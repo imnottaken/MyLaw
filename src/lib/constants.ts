@@ -1,0 +1,28 @@
+export const INDIAN_STATE_BAR_COUNCILS = [
+  "Bar Council of Delhi",
+  "Bar Council of Maharashtra & Goa",
+  "Bar Council of Karnataka",
+  "Bar Council of Tamil Nadu & Puducherry",
+  "Bar Council of West Bengal",
+  "Bar Council of Uttar Pradesh",
+  "Bar Council of Punjab & Haryana",
+  "Bar Council of Gujarat",
+  "Bar Council of Rajasthan",
+  "Bar Council of Kerala",
+  "Bar Council of Andhra Pradesh",
+  "Bar Council of Telangana",
+  "Bar Council of Bihar",
+  "Bar Council of Madhya Pradesh",
+  "Bar Council of Odisha",
+  "Bar Council of Assam Nagaland Mizoram Arunachal Pradesh & Sikkim",
+  "Bar Council of Jharkhand",
+  "Bar Council of Chhattisgarh",
+  "Bar Council of Himachal Pradesh",
+  "Bar Council of Uttarakhand",
+  "Bar Council of Jammu & Kashmir",
+  "Bar Council of Tripura",
+  "Bar Council of Meghalaya",
+  "Bar Council of Manipur",
+] as const;
+
+export type StateBarCouncil = (typeof INDIAN_STATE_BAR_COUNCILS)[number];

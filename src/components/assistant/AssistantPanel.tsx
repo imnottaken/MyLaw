@@ -79,10 +79,8 @@ export function AssistantPanel({
           <div className="w-7 h-7 rounded-full bg-[#285A8E] text-white flex items-center justify-center shadow-sm">
             <BotIcon className="w-4 h-4" />
           </div>
-          <h2 id="assistant-panel-title" className="text-sm font-semibold text-[#172033] flex items-center gap-2">
-            <span>MyLaw</span>
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#2F7C78]" aria-hidden="true" />
-            <span className="text-[#5A6E85] font-normal">Assistant</span>
+          <h2 id="assistant-panel-title" className="text-sm font-semibold text-[#172033] flex items-center gap-1.5">
+            <span>MyLaw Assistant</span>
           </h2>
         </div>
         <button

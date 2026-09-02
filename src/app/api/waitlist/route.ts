@@ -339,35 +339,28 @@ export async function POST(request: NextRequest) {
           await resend.emails.send({
             from: emailFrom,
             to: trimmedEmail,
-            subject: `Priority Access Confirmed — MyLaw Lawyer Verification`,
+            subject: `You're on the list — MyLaw Lawyer Access`,
             html: `
               <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 32px 24px; color: #172033; max-width: 600px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E6E8EC; border-radius: 10px;">
                 <div style="text-align: center; margin-bottom: 24px;">
                   <h1 style="color: #172033; font-size: 24px; font-weight: 700; margin: 0 0 8px 0; letter-spacing: -0.02em;">MyLaw</h1>
-                  <p style="color: #2F7C78; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">Lawyer Verification Priority Cohort</p>
+                  <p style="color: #2F7C78; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">Lawyer Early Access</p>
                 </div>
 
                 <div style="margin-bottom: 28px; line-height: 1.6; color: #475467; font-size: 15px;">
                   <p>Dear Advocate,</p>
-                  <p>Thank you for registering your practice for the <strong>MyLaw</strong> early access practitioner network.</p>
-                  <p>We have received your credential submission for verification:</p>
+                  <p>Thank you for joining the <strong>MyLaw</strong> waitlist. We have received your details:</p>
                   <div style="background: #F7F8FA; border: 1px solid #E6E8EC; border-radius: 8px; padding: 14px 16px; margin: 16px 0; font-size: 14px;">
                     <p style="margin: 4px 0;"><strong>State Bar Council:</strong> ${validatedBarCouncilState}</p>
                     <p style="margin: 4px 0;"><strong>Enrollment Number:</strong> ${validatedEnrollmentNumber}</p>
-                    <p style="margin: 4px 0;"><strong>Contact Mobile:</strong> ${sanitizedMobile}</p>
-                    <p style="margin: 4px 0;"><strong>Verification Status:</strong> <span style="color: #D97706; font-weight: 600;">Pending Verification</span></p>
+                    <p style="margin: 4px 0;"><strong>Mobile:</strong> ${sanitizedMobile}</p>
                   </div>
-                  <p>Our practitioner onboarding team will verify your Bar Council credentials before our platform beta launch. Once approved, you will gain priority access to your verified digital practice profile and prospective client inquiries.</p>
-                </div>
-
-                <div style="background: #F7F8FA; border: 1px solid #E6E8EC; border-radius: 8px; padding: 16px; margin-bottom: 28px; font-size: 13px; color: #667085;">
-                  <strong style="color: #172033;">Practitioner Onboarding Support</strong><br>
-                  If you need to update any details, simply reply directly to this email or reach our onboarding desk.
+                  <p>We'll reach out directly to your email or mobile when early access opens.</p>
                 </div>
 
                 <div style="border-top: 1px solid #E6E8EC; padding-top: 20px; text-align: center; font-size: 12px; color: #98A2B3;">
                   &copy; 2026 MyLaw. All rights reserved.<br>
-                  Legal practice, modernized.
+                  Legal help, simplified.
                 </div>
               </div>
             `,

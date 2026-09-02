@@ -4,7 +4,7 @@ import Image from "next/image";
 import WaitlistForm from "@/components/waitlist/WaitlistForm";
 
 export const metadata: Metadata = {
-  title: "Join the Waitlist — MyLaw",
+  title: "Join the Waitlist | MyLaw",
   description:
     "Be among the first to experience MyLaw. We're building a better way to discover and connect with legal professionals.",
 };

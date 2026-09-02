@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MyLaw — Legal Help, Simplified",
+  title: "MyLaw | Legal Help, Simplified",
   description: "A simpler way to discover and connect with the right legal professionals.",
   icons: {
     icon: [

@@ -137,23 +137,23 @@ function WaitlistFormContent() {
         {/* Role Selector — Polished Icon Blocks */}
         <div className="space-y-2">
           <span className="block text-[11px] font-medium text-[#667085] uppercase tracking-wider">I am a:</span>
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
             <button
               type="button"
               onClick={() => setRole(role === "help" ? null : "help")}
-              className={`flex items-start gap-2.5 p-3 rounded-[8px] border text-left cursor-pointer transition-all duration-150 select-none ${
+              className={`flex items-start gap-2 sm:gap-2.5 p-2.5 sm:p-3 rounded-[8px] border text-left cursor-pointer transition-all duration-150 select-none ${
                 role === "help"
                   ? "border-[#285A8E] bg-[#285A8E]/[0.05] text-[#172033]"
                   : "border-[#E6E8EC] bg-white text-[#172033] hover:bg-[#F7F8FA] hover:border-[#E6E8EC]/80"
               }`}
             >
-              <UserIcon className={`w-[18px] h-[18px] mt-0.5 shrink-0 ${role === "help" ? "text-[#285A8E]" : "text-[#667085]"}`} />
-              <div>
-                <div className={`text-[13px] font-semibold leading-tight ${role === "help" ? "text-[#172033]" : "text-[#172033]"}`}>
+              <UserIcon className={`w-4 h-4 sm:w-[18px] sm:h-[18px] mt-0.5 shrink-0 ${role === "help" ? "text-[#285A8E]" : "text-[#667085]"}`} />
+              <div className="min-w-0">
+                <div className={`text-xs sm:text-[13px] font-semibold leading-tight truncate ${role === "help" ? "text-[#172033]" : "text-[#172033]"}`}>
                   Individual
                 </div>
-                <div className="text-[11px] text-[#667085] leading-snug mt-0.5">
-                  Seeking legal help
+                <div className="text-[10px] sm:text-[11px] text-[#667085] leading-snug mt-0.5 truncate sm:whitespace-normal">
+                  Seeking help
                 </div>
               </div>
             </button>
@@ -161,18 +161,18 @@ function WaitlistFormContent() {
             <button
               type="button"
               onClick={() => setRole(role === "lawyer" ? null : "lawyer")}
-              className={`flex items-start gap-2.5 p-3 rounded-[8px] border text-left cursor-pointer transition-all duration-150 select-none ${
+              className={`flex items-start gap-2 sm:gap-2.5 p-2.5 sm:p-3 rounded-[8px] border text-left cursor-pointer transition-all duration-150 select-none ${
                 role === "lawyer"
                   ? "border-[#285A8E] bg-[#285A8E]/[0.05] text-[#172033]"
                   : "border-[#E6E8EC] bg-white text-[#172033] hover:bg-[#F7F8FA] hover:border-[#E6E8EC]/80"
               }`}
             >
-              <BriefcaseIcon className={`w-[18px] h-[18px] mt-0.5 shrink-0 ${role === "lawyer" ? "text-[#285A8E]" : "text-[#667085]"}`} />
-              <div>
-                <div className={`text-[13px] font-semibold leading-tight ${role === "lawyer" ? "text-[#172033]" : "text-[#172033]"}`}>
+              <BriefcaseIcon className={`w-4 h-4 sm:w-[18px] sm:h-[18px] mt-0.5 shrink-0 ${role === "lawyer" ? "text-[#285A8E]" : "text-[#667085]"}`} />
+              <div className="min-w-0">
+                <div className={`text-xs sm:text-[13px] font-semibold leading-tight truncate ${role === "lawyer" ? "text-[#172033]" : "text-[#172033]"}`}>
                   Lawyer
                 </div>
-                <div className="text-[11px] text-[#667085] leading-snug mt-0.5">
+                <div className="text-[10px] sm:text-[11px] text-[#667085] leading-snug mt-0.5 truncate sm:whitespace-normal">
                   Professional
                 </div>
               </div>
@@ -180,8 +180,8 @@ function WaitlistFormContent() {
           </div>
         </div>
 
-        {/* Email + CTA — Cohesive Form Row */}
-        <div className="flex gap-2">
+        {/* Email + CTA — Responsive Form Row */}
+        <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-2">
           <label htmlFor="waitlist-email" className="sr-only">
             Email address
           </label>
@@ -192,12 +192,12 @@ function WaitlistFormContent() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email address"
-            className="flex-1 h-[50px] px-4 bg-white border border-[#E6E8EC] rounded-[8px] text-sm text-[#172033] placeholder:text-[#667085]/50 focus:outline-none focus:ring-2 focus:ring-[#285A8E]/15 focus:border-[#285A8E] transition-all duration-150"
+            className="w-full sm:flex-1 h-[48px] sm:h-[50px] px-3.5 sm:px-4 bg-white border border-[#E6E8EC] rounded-[8px] text-sm text-[#172033] placeholder:text-[#667085]/50 focus:outline-none focus:ring-2 focus:ring-[#285A8E]/15 focus:border-[#285A8E] transition-all duration-150"
           />
           <button
             type="submit"
             disabled={isSubmitting}
-            className="h-[50px] px-5 inline-flex items-center justify-center gap-2 whitespace-nowrap bg-[#285A8E] hover:bg-[#1e4670] text-white text-sm font-semibold rounded-[8px] active:scale-[0.98] transition-all duration-150 shadow-sm group disabled:opacity-60 cursor-pointer"
+            className="w-full sm:w-auto h-[48px] sm:h-[50px] px-5 inline-flex items-center justify-center gap-2 whitespace-nowrap bg-[#285A8E] hover:bg-[#1e4670] text-white text-sm font-semibold rounded-[8px] active:scale-[0.98] transition-all duration-150 shadow-sm group disabled:opacity-60 cursor-pointer"
           >
             <span>{isSubmitting ? "Joining..." : "Join the Waitlist"}</span>
             {!isSubmitting && (
@@ -226,13 +226,13 @@ function WaitlistFormFallback() {
   return (
     <div className="w-full space-y-4 animate-pulse">
       <div className="h-5 bg-[#F7F8FA] rounded w-12" />
-      <div className="grid grid-cols-2 gap-2.5">
-        <div className="h-16 bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
-        <div className="h-16 bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
+      <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+        <div className="h-14 sm:h-16 bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
+        <div className="h-14 sm:h-16 bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
       </div>
-      <div className="flex gap-2">
-        <div className="flex-1 h-[50px] bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
-        <div className="h-[50px] w-36 bg-[#285A8E]/20 rounded-[8px]" />
+      <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-2">
+        <div className="w-full sm:flex-1 h-[48px] sm:h-[50px] bg-[#F7F8FA] border border-[#E6E8EC] rounded-[8px]" />
+        <div className="w-full sm:w-36 h-[48px] sm:h-[50px] bg-[#285A8E]/20 rounded-[8px]" />
       </div>
     </div>
   );

@@ -71,7 +71,7 @@ export function AssistantPanel({
       role="dialog"
       aria-labelledby="assistant-panel-title"
       aria-modal="false"
-      className="fixed bottom-20 right-4 sm:bottom-22 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[380px] max-h-[580px] flex flex-col bg-[#F3F7FA] border border-[#D2DFEB] rounded-[16px] shadow-[0_16px_48px_rgba(23,32,51,0.16),0_2px_8px_rgba(23,32,51,0.06)] overflow-hidden transition-all duration-200 ease-out"
+      className="fixed bottom-20 right-4 sm:bottom-22 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[380px] max-h-[calc(100dvh-100px)] sm:max-h-[580px] flex flex-col bg-[#F3F7FA] border border-[#D2DFEB] rounded-[16px] shadow-[0_16px_48px_rgba(23,32,51,0.16),0_2px_8px_rgba(23,32,51,0.06)] overflow-hidden transition-all duration-200 ease-out"
     >
       {/* Header */}
       <header className="flex items-center justify-between px-4 py-3.5 bg-[#E6EFF6] border-b border-[#D0DDE8] select-none">

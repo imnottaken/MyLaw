@@ -124,7 +124,7 @@ export default function WaitlistPage() {
 
             {/* Right Column: Refined Waitlist Card (lg:col-span-5) */}
             <div className="lg:col-span-5 w-full mt-8 lg:mt-0 flex justify-center lg:justify-end">
-              <div className="w-full max-w-[460px] bg-white border border-[#E6E8EC]/60 rounded-[8px] sm:rounded-[10px] p-6 sm:p-7 shadow-[0_4px_24px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.06)] text-[#172033]">
+              <div className="w-full max-w-[460px] bg-white border border-[#E6E8EC]/60 rounded-[8px] sm:rounded-[10px] p-5 sm:p-7 shadow-[0_4px_24px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.06)] text-[#172033]">
                 {/* Card Header */}
                 <div className="mb-5 space-y-1.5">
                   <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#285A8E] uppercase tracking-wider">
